@@ -1,4 +1,4 @@
-application: <google-cloud-platform-project-id>
+application: hwcheck
 version: 1
 runtime: python27
 api_version: 1
