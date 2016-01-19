@@ -1,5 +1,5 @@
 from . import api
-from application.model.goal import Goal
+from application.models.goal import Goal
 
 
 @api.route("/")
