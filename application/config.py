@@ -19,6 +19,6 @@ class Config:
         else:
             print "local!!!!"
             # dev_appserver.py or appengine launcher
-            cls.SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://root@localhost/goalTemplatedb'
+            cls.SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://root@localhost/hwCheck-db'
 
         app.config.from_object(cls)

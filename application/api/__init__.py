@@ -2,4 +2,7 @@ from flask import Blueprint
 
 api = Blueprint('api', __name__)
 
-from . import goal
+from . import (
+    user,
+    course
+)
