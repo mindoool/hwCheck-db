@@ -26,7 +26,7 @@ def create_courses():
         ), 409
 
     try:
-        course = Course(**request_params)
+        course = Course(name=name)
 
         db.session.add(course)
         db.session.commit()
