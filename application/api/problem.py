@@ -22,23 +22,23 @@ def create_problems():
 
     problem_list = []
 
-    try:
-        for i in number:
-            course_id = db.session.query(Course).filter(Course.name == content[i].course).id
+    # try:
+    for i in range(number):
+        course_id = db.session.query(Course).filter(Course.name == content[i]['course']).first().id
 
-            problem = Problem(name=content[i].name, course_id=course_id, date=content[i].date)
-            problem_list.append(problem)
+        problem = Problem(name=content[i]['name'], course_id=course_id, date=content[i]['date'])
+        problem_list.append(problem)
 
-        db.session.add_all(problem_list)
-        db.session.commit()
+    db.session.add_all(problem_list)
+    db.session.commit()
 
-        return jsonify(
-            data=problem_list
-        ), 201
-    except:
-        return jsonify(
-            userMessage="문제 등록에 실패하였습니다."
-        ), 403
+    return jsonify(
+        data=problem_list
+    ), 201
+    # except:
+    #     return jsonify(
+    #         userMessage="문제 등록에 실패하였습니다."
+    #     ), 403
 
 
 # read

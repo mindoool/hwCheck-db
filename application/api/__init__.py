@@ -4,5 +4,6 @@ api = Blueprint('api', __name__)
 
 from . import (
     user,
-    course
+    course,
+    problem
 )
