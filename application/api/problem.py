@@ -64,7 +64,8 @@ def get_problem_by_id(course_id, problem_id):
 def get_problems():
     q = Problem.get_query()
 
-    print request.args.get('date')
+    print request.args.get('date1')
+    print request.args.get('date2')
 
     if request.args.get('date1') is None:
         date1 = datetime.date.today()
