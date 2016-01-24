@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+import datetime
 from flask import request, jsonify, abort
 from . import api
 from application import db
 from application.models.problem import Problem
-from application.models.course import Course
+from application.models.group import Group
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
 
@@ -13,6 +14,7 @@ from application.lib.rest.auth_helper import required_token
 def create_problems():
     request_params = request.get_json()
     content = request_params.get('content')
+    headers = content.pop(0)
     number = len(content)
 
     if content is None:
@@ -22,27 +24,28 @@ def create_problems():
 
     problem_list = []
 
-    # try:
-    for i in range(number):
-        course_id = db.session.query(Course).filter(Course.name == content[i]['course']).first().id
+    try:
+        for i in range(number):
+            group_id = db.session.query(Group).filter(Group.name == content[i]['data'][0]).first().id
+            date = content[i]['data'][1].split('-')
+            date_object = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+            problem = Problem(name=content[i]['data'][2], group_id=group_id, date=date_object)
+            problem_list.append(problem)
 
-        problem = Problem(name=content[i]['name'], course_id=course_id, date=content[i]['date'])
-        problem_list.append(problem)
+        db.session.add_all(problem_list)
+        db.session.commit()
 
-    db.session.add_all(problem_list)
-    db.session.commit()
-
-    return jsonify(
-        data=problem_list
-    ), 201
-    # except:
-    #     return jsonify(
-    #         userMessage="문제 등록에 실패하였습니다."
-    #     ), 403
+        return jsonify(
+            data=[problem.serialize() for problem in problem_list]
+        ), 201
+    except:
+        return jsonify(
+            userMessage="문제 등록에 실패하였습니다."
+        ), 403
 
 
 # read
-@api.route('courses/<int:course_id>/problems/<int:problem_id>', methods=['GET'])
+@api.route('/courses/<int:course_id>/problems/<int:problem_id>', methods=['GET'])
 def get_problem_by_id(course_id, problem_id):
     try:
         q = Problem.get_query(filter_condition=(Problem.id == problem_id))
@@ -57,14 +60,30 @@ def get_problem_by_id(course_id, problem_id):
 
 
 # read
-@api.route('courses/<int:course_id>/problems', methods=['GET'])
-def get_problems(course_id):
-    q = Problem.get_query(filter_condition=(Problem.course_id == course_id))
+@api.route('/problems', methods=['GET'])
+def get_problems():
+    q = Problem.get_query()
 
-    date = request.get_json().get('date')
+    print request.args.get('date')
 
-    if date is not None:
-        q = q.filter(Problem.date == date)
+    if request.args.get('date1') is None:
+        date1 = datetime.date.today()
+        print request.args.get('date')
+    else:
+        date1 = datetime.datetime.strptime(request.args.get('date1'), "%Y-%m-%d")
+        print request.args.get('date1')
+
+    if request.args.get('date2') is None:
+        date2 = datetime.date.today()
+        print request.args.get('date')
+    else:
+        date2 = datetime.datetime.strptime(request.args.get('date2'), "%Y-%m-%d")
+        print request.args.get('date2')
+
+    q = q.filter(Problem.date.between(date1, date2))
+
+    print date1
+    print date2
 
     return jsonify(
         data=map(SerializableModelMixin.serialize_row, q.all())
@@ -72,7 +91,7 @@ def get_problems(course_id):
 
 
 # update
-@api.route('courses/<int:course_id>/problems/<int:problem_id>', methods=['PUT'])
+@api.route('/courses/<int:course_id>/problems/<int:problem_id>', methods=['PUT'])
 def update_problems(course_id, problem_id):
     try:
         problem = db.session.query(Problem).get(problem_id)
@@ -94,7 +113,7 @@ def update_problems(course_id, problem_id):
 
 
 # delete
-@api.route('courses/<int:course_id>/problems/<int:problem_id>', methods=['DELETE'])
+@api.route('/courses/<int:course_id>/problems/<int:problem_id>', methods=['DELETE'])
 def delete_problems(course_id, problem_id):
     try:
         problem = db.session.query(Problem).get(problem_id)
