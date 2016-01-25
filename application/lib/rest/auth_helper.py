@@ -9,7 +9,7 @@ from application.models.user import User
 from application.lib.jwt.jwt_helper import jwt_decode
 
 
-def _get_user_from_request():
+def get_user_from_request():
     """
 
     :param request:
@@ -44,6 +44,20 @@ def required_token(f):
         decoded_user_id = decoded_data.get("user_id")
         if 'request_user_id' in getargspec(f).args:
             kwargs['request_user_id'] = decoded_user_id
+
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def required_admin(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user = get_user_from_request()
+        if user is None or not user.is_admin:
+            return jsonify(
+                userMessage="this request, admin authorization need"
+            ), 401
 
         return f(*args, **kwargs)
 

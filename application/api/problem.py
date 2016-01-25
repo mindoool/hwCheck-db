@@ -7,6 +7,7 @@ from application.models.problem import Problem
 from application.models.group import Group
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
+from application.lib.rest.auth_helper import required_admin
 
 
 # create
@@ -61,12 +62,11 @@ def get_problem_by_id(course_id, problem_id):
 
 # read
 @api.route('/problems', methods=['GET'])
+@required_token
 def get_problems():
     q = Problem.get_query()
 
-    print request.args.get('date1')
-    print request.args.get('date2')
-
+    # start date end date 처리
     if request.args.get('date1') is None:
         date1 = datetime.date.today()
         print request.args.get('date')
@@ -83,8 +83,12 @@ def get_problems():
 
     q = q.filter(Problem.date.between(date1, date2))
 
-    print date1
-    print date2
+    if request.args.get('group') is not None:
+        if request.args.get('group') =="":
+            pass
+        else:
+            group_id = db.session.query(Group).filter(Group.name == request.args.get('group')).one().id
+            q = q.filter(Problem.group_id == group_id)
 
     return jsonify(
         data=map(SerializableModelMixin.serialize_row, q.all())
