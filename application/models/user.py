@@ -13,10 +13,8 @@ class User(db.Model, TimeStampMixin, SerializableModelMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(200), nullable=False)
+    name = db.Column(db.String(30), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-
-    # 추가정보
-    group = db.Column(db.String(30))
 
 
     def __repr__(self):

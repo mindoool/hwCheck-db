@@ -68,23 +68,24 @@ def get_courses():
 # update
 @api.route('/courses/<int:course_id>', methods=['PUT'])
 def update_course(course_id):
-    try:
-        course = db.session.query(Course).get(course_id)
+    # try:
+    course = db.session.query(Course).get(course_id)
 
-        name = request.get_json().get('name')
-        if name is not None and course.name != name:
-            course.name = name
+    request_params = request.get_json()
+    name = request_params.get('name')
+    if name is not None and course.name != name:
+        course.name = name
 
-        db.session.commit()
+    db.session.commit()
 
-        return jsonify(
-            data=course.serialize()
-        ), 201
+    return jsonify(
+        data=course.serialize()
+    ), 201
 
-    except:
-        return jsonify(
-            userMessage="과정을 찾을 수 없습니다."
-        ), 404
+    # except:
+    #     return jsonify(
+    #         userMessage="과정을 찾을 수 없습니다."
+    #     ), 404
 
 
 # delete

@@ -51,7 +51,7 @@ def get_problem_by_id(course_id, problem_id):
     try:
         q = Problem.get_query(filter_condition=(Problem.id == problem_id))
         return jsonify(
-            data=SerializableModelMixin.serialize_row(q)
+            data=SerializableModelMixin.serialize_row(q.one())
         ), 200
 
     except:

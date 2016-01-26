@@ -3,6 +3,7 @@ from flask import request, jsonify, abort
 from . import api
 from application import db
 from application.models.user import User
+from application.models.user_group_relation import UserGroupRelation
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
 from application.lib.encript.encript_helper import password_encode
@@ -52,6 +53,8 @@ def sign_up():
     request_params = request.get_json()
     email = request_params.get('email')
     password = request_params.get('password')
+    name = request_params.get('name')
+    group_id = request_params.pop('groupId')
 
     # TODO  regex, password validation need
     if email is None:
@@ -64,12 +67,17 @@ def sign_up():
             userMessage="비밀번호 입력을 확인해주세요."
         ), 400
 
+    if name is None:
+        return jsonify(
+            userMessage="이름 입력을 확인해주세요."
+        ), 400
+
     q = db.session.query(User) \
         .filter(User.email == email)
 
     if q.count() > 0:
         return jsonify(
-            userMeesage="already enrolled email"
+            userMeesage="이미 등록된 이메일입니다."
         ), 409
 
     user = User.add(request_params)
@@ -79,8 +87,14 @@ def sign_up():
             userMessage="server error, try again"
         ), 400
 
+    # user_group_relation 추가
+    user_group_relation = UserGroupRelation(user_id=int(user.id), group_id=int(group_id))
+    db.session.add(user_group_relation)
+    db.session.commit()
+
     token = user.get_token()
     user_data = user.serialize()
+    user_data['user_group_relation'] = user_group_relation.serialize()
 
     return jsonify(
         data=user_data,
@@ -108,7 +122,7 @@ def get_user_by_id(user_id):
 # read
 @api.route('/users', methods=['GET'])
 @required_token
-def users():
+def get_users():
     limit = request.args.get('limit', 10)
     last_id = request.args.get('lastId')
     q = db.session.query(User)
@@ -117,10 +131,9 @@ def users():
         q = q.filter(User.id < last_id)
 
     q = q.order_by(User.id.desc()).limit(limit)
-    return_data = map(SerializableModelMixin.serialize_row, q.all())
 
     return jsonify(
-        data=return_data
+        data=map(lambda obj: obj.serialize(), q)
     ), 200
 
 
