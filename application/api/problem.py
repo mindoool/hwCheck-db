@@ -46,8 +46,8 @@ def create_problems():
 
 
 # read
-@api.route('/courses/<int:course_id>/problems/<int:problem_id>', methods=['GET'])
-def get_problem_by_id(course_id, problem_id):
+@api.route('/groups/<int:group_id>/problems/<int:problem_id>', methods=['GET'])
+def get_problem_by_id(group_id, problem_id):
     try:
         q = Problem.get_query(filter_condition=(Problem.id == problem_id))
         return jsonify(
@@ -61,10 +61,15 @@ def get_problem_by_id(course_id, problem_id):
 
 
 # read
-@api.route('/problems', methods=['GET'])
+@api.route('/groups/<int:group_id>/problems', methods=['GET'])
 @required_token
-def get_problems():
-    q = Problem.get_query()
+def get_problems(group_id=0):
+    if group_id != 0:
+        filter_condition = (Problem.group_id == group_id)
+    else:
+        filter_condition = None
+
+    q = Problem.get_query(filter_condition=filter_condition)
 
     # start date end date 처리
     if request.args.get('date1') is None:
@@ -83,15 +88,15 @@ def get_problems():
 
     q = q.filter(Problem.date.between(date1, date2))
 
-    if request.args.get('group') is not None:
-        if request.args.get('group') =="":
-            pass
-        else:
-            group_id = db.session.query(Group).filter(Group.name == request.args.get('group')).one().id
-            q = q.filter(Problem.group_id == group_id)
+    # if request.args.get('group') is not None:
+    #     if request.args.get('group') =="":
+    #         pass
+    #     else:
+    #         group_id = db.session.query(Group).filter(Group.name == request.args.get('group')).one().id
+    #         q = q.filter(Problem.group_id == group_id)
 
     return jsonify(
-        data=map(SerializableModelMixin.serialize_row, q.all())
+        data=map(SerializableModelMixin.serialize_row, q)
     ), 200
 
 

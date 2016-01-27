@@ -22,5 +22,4 @@ class Problem(db.Model, TimeStampMixin, SerializableModelMixin):
         if filter_condition is not None:
             q = q.filter(filter_condition)
 
-        return q.join(Group, Group.id == cls.group_id)\
-            # .join(User, User.id == cls.user_id)
+        return q.join(Group, Group.id == cls.group_id)
