@@ -29,9 +29,15 @@ def create_problems():
         for i in range(number):
             group_id = db.session.query(Group).filter(Group.name == content[i]['data'][0]).first().id
             date = content[i]['data'][1].split('-')
+            name = content[i]['data'][2]
             date_object = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-            problem = Problem(name=content[i]['data'][2], group_id=group_id, date=date_object)
-            problem_list.append(problem)
+
+            # 이미 동일한 문제가 있을 경우 아무짓도 안하도록
+            problem = db.session.query(Problem).filter(Problem.group_id == group_id, Problem.name == name,
+                                                       Problem.date == date_object).first()
+            if problem is None:
+                problem = Problem(name=name, group_id=group_id, date=date_object)
+                problem_list.append(problem)
 
         db.session.add_all(problem_list)
         db.session.commit()
@@ -48,21 +54,21 @@ def create_problems():
 # read
 @api.route('/groups/<int:group_id>/problems/<int:problem_id>', methods=['GET'])
 def get_problem_by_id(group_id, problem_id):
-    try:
-        q = Problem.get_query(filter_condition=(Problem.id == problem_id))
-        return jsonify(
-            data=SerializableModelMixin.serialize_row(q.one())
-        ), 200
+    # try:
+    q = Problem.get_query(filter_condition=(Problem.id == problem_id))
+    return jsonify(
+        data=SerializableModelMixin.serialize_row(q)
+    ), 200
 
-    except:
-        return jsonify(
-            userMessage="해당 문제를 찾을 수 없습니다."
-        ), 404
+    # except:
+    #     return jsonify(
+    #         userMessage="해당 문제를 찾을 수 없습니다."
+    #     ), 404
 
 
 # read
 @api.route('/groups/<int:group_id>/problems', methods=['GET'])
-@required_token
+# @required_token
 def get_problems(group_id=0):
     if group_id != 0:
         filter_condition = (Problem.group_id == group_id)
@@ -101,14 +107,19 @@ def get_problems(group_id=0):
 
 
 # update
-@api.route('/courses/<int:course_id>/problems/<int:problem_id>', methods=['PUT'])
-def update_problems(course_id, problem_id):
+@api.route('/groups/<int:group_id>/problems/<int:problem_id>', methods=['PUT'])
+def update_problems(group_id, problem_id):
+    request_params = request.get_json()
+    name = request_params.get('name')
+    new_group_id = request_params.get('groupId')
     try:
-        problem = db.session.query(Problem).get(problem_id)
+        problem = db.session.query(Problem).filter(Problem.id == problem_id, Problem.group_id == group_id)
 
-        name = request.get_json().get('name')
         if name is not None and problem.name != name:
             problem.name = name
+
+        if new_group_id is not None and problem.group_id != new_group_id:
+            problem.group_id = new_group_id
 
         db.session.commit()
 
@@ -123,10 +134,10 @@ def update_problems(course_id, problem_id):
 
 
 # delete
-@api.route('/courses/<int:course_id>/problems/<int:problem_id>', methods=['DELETE'])
-def delete_problems(course_id, problem_id):
+@api.route('/groups/<int:group_id>/problems/<int:problem_id>', methods=['DELETE'])
+def delete_problems(group_id, problem_id):
     try:
-        problem = db.session.query(Problem).get(problem_id)
+        problem = db.session.query(Problem).filter(Problem.id == problem_id, Problem.group_id == group_id)
 
         try:
             db.session.delete(problem)

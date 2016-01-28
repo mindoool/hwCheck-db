@@ -31,22 +31,29 @@ def get_user_group_relation_by_id(user_group_relation_id):
 @api.route('/user-group-relations', methods=['GET'])
 # @required_token
 def get_user_group_relations():
-    user_id = request.args.get('userId')
-    group_id = request.args.get('groupId')
+    user_id = int(request.args.get('userId'))
+    group_id = int(request.args.get('groupId'))
+
+    print user_id
+    print group_id
 
     if user_id >= 1 and group_id >= 1:
         filter_condition = (UserGroupRelation.user_id == user_id, UserGroupRelation.group_id == group_id)
+
     elif user_id >= 1 >= group_id:
         filter_condition = (UserGroupRelation.user_id == user_id)
     elif group_id >= 1 >= user_id:
         filter_condition = (UserGroupRelation.group_id == group_id)
     else:
         filter_condition = None
+    # filter_condition = None
 
-    group = Group.get_query(filter_condition=filter_condition)
+    print filter_condition
+
+    user_group_relations = UserGroupRelation.get_query(filter_condition=filter_condition)
 
     return jsonify(
-        data=map(SerializableModelMixin.serialize_row, group)
+        data=map(SerializableModelMixin.serialize_row, user_group_relations)
     ), 200
 
 
