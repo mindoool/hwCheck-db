@@ -31,8 +31,15 @@ def get_user_group_relation_by_id(user_group_relation_id):
 @api.route('/user-group-relations', methods=['GET'])
 # @required_token
 def get_user_group_relations():
-    user_id = int(request.args.get('userId'))
-    group_id = int(request.args.get('groupId'))
+    if request.args.get('userId') is not None:
+        user_id = int(request.args.get('userId'))
+    else:
+        user_id = 0
+
+    if request.args.get('userId'):
+        group_id = int(request.args.get('groupId'))
+    else:
+        group_id = 0
 
     print user_id
     print group_id

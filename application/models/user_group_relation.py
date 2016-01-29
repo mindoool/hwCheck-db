@@ -2,6 +2,7 @@
 from application import db
 from application.models.user import User
 from application.models.group import Group
+from application.models.course import Course
 from application.models.mixin import TimeStampMixin
 from application.models.mixin import SerializableModelMixin
 
@@ -15,10 +16,11 @@ class UserGroupRelation(db.Model, TimeStampMixin, SerializableModelMixin):
 
     @classmethod
     def get_query(cls, filter_condition=None):
-        q = db.session.query(cls, User, Group)
+        q = db.session.query(cls, User, Group, Course)
 
         if filter_condition is not None:
             q = q.filter(filter_condition)
 
         return q.join(User, User.id == cls.user_id) \
-            .join(Group, Group.id == cls.group_id)
+            .join(Group, Group.id == cls.group_id)\
+            .join(Course, Course.id == Group.course_id)

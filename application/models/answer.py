@@ -8,7 +8,7 @@ from application.models.mixin import SerializableModelMixin
 
 class Answer(db.Model, TimeStampMixin, SerializableModelMixin):
     id = db.Column(db.Integer, primary_key=True)
-    answer = db.Column(db.String(30))
+    content = db.Column(db.String(30))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', foreign_keys=[user_id])
     problem_id = db.Column(db.Integer, db.ForeignKey('problem.id'))
