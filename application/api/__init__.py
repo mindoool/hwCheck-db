@@ -7,5 +7,6 @@ from . import (
     group,
     problem,
     user,
-    user_group_relation
+    user_group_relation,
+    answer
 )

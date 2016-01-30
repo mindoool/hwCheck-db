@@ -12,7 +12,7 @@ class Answer(db.Model, TimeStampMixin, SerializableModelMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', foreign_keys=[user_id])
     problem_id = db.Column(db.Integer, db.ForeignKey('problem.id'))
-    group = db.relationship('Problem', foreign_keys=[problem_id])
+    problem = db.relationship('Problem', foreign_keys=[problem_id])
 
     @classmethod
     def get_query(cls, filter_condition=None):

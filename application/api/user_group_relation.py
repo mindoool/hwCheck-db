@@ -41,9 +41,6 @@ def get_user_group_relations():
     else:
         group_id = 0
 
-    print user_id
-    print group_id
-
     if user_id >= 1 and group_id >= 1:
         filter_condition = (UserGroupRelation.user_id == user_id, UserGroupRelation.group_id == group_id)
 
