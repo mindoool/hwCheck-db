@@ -82,10 +82,10 @@ def get_problem_by_id(homework_id, problem_id):
 # read
 @api.route('/homeworks/<int:homework_id>/problems', methods=['GET'])
 # @required_token
-def get_problems(homework_id):
+def get_problems(homework_id=0):
     group_id = request.args.get('groupId', 0)
 
-    if group_id != 0:
+    if homework_id != 0:
         filter_condition = (Problem.homework_id == homework_id)
     else:
         filter_condition = None
