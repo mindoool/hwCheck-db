@@ -5,6 +5,7 @@ from . import api
 from application import db
 from application.models.problem import Problem
 from application.models.group import Group
+from application.models.homework import Homework
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
 from application.lib.rest.auth_helper import required_admin
@@ -28,15 +29,27 @@ def create_problems():
     try:
         for i in range(number):
             group_id = db.session.query(Group).filter(Group.name == content[i]['data'][0]).first().id
-            date = content[i]['data'][1].split('-')
-            name = content[i]['data'][2]
+            homework_name = content[i]['data'][1]
+            date = content[i]['data'][2].split('-')
             date_object = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+            problem_name = content[i]['data'][3]
+
+            # 숙제가 없는 경우 만들어주기 - name, date, group_id
+            q = db.session.query(Homework).filter(Homework.name == homework_name)
+            if q is not None:
+                homework_id = q.first().id
+            else:
+                homework = Homework(name=homework_name, date=date_object, group_id=group_id)
+                db.session.add(homework)
+                db.session.commit()
+                homework_id = homework.id
 
             # 이미 동일한 문제가 있을 경우 아무짓도 안하도록
-            problem = db.session.query(Problem).filter(Problem.group_id == group_id, Problem.name == name,
+            problem = db.session.query(Problem).filter(Problem.group_id == group_id, Problem.name == problem_name,
                                                        Problem.date == date_object).first()
+            # 문제 만들기 - name, homework_id
             if problem is None:
-                problem = Problem(name=name, group_id=group_id, date=date_object)
+                problem = Problem(name=problem_name, homework_id=homework_id)
                 problem_list.append(problem)
 
         db.session.add_all(problem_list)
@@ -52,8 +65,8 @@ def create_problems():
 
 
 # read
-@api.route('/groups/<int:group_id>/problems/<int:problem_id>', methods=['GET'])
-def get_problem_by_id(group_id, problem_id):
+@api.route('/homeworks/<int:homework_id>/problems/<int:problem_id>', methods=['GET'])
+def get_problem_by_id(homework_id, problem_id):
     # try:
     q = Problem.get_query(filter_condition=(Problem.id == problem_id))
     return jsonify(
@@ -67,13 +80,17 @@ def get_problem_by_id(group_id, problem_id):
 
 
 # read
-@api.route('/groups/<int:group_id>/problems', methods=['GET'])
+@api.route('/homeworks/<int:homework_id>/problems', methods=['GET'])
 # @required_token
-def get_problems(group_id=0):
+def get_problems(homework_id):
+    group_id = request.args.get('groupId', 0)
+
     if group_id != 0:
-        filter_condition = (Problem.group_id == group_id)
+        filter_condition = (Problem.homework_id == homework_id)
     else:
         filter_condition = None
+
+    # group_id 가지고도 filter condition 넣는게 필요하지 않을까...
 
     q = Problem.get_query(filter_condition=filter_condition)
 
@@ -107,19 +124,19 @@ def get_problems(group_id=0):
 
 
 # update
-@api.route('/groups/<int:group_id>/problems/<int:problem_id>', methods=['PUT'])
-def update_problems(group_id, problem_id):
+@api.route('/homeworks/<int:homework_id>/problems/<int:problem_id>', methods=['PUT'])
+def update_problems(homework_id, problem_id):
     request_params = request.get_json()
     name = request_params.get('name')
-    new_group_id = request_params.get('groupId')
+    new_homework_id = request_params.get('homeworkId')
     try:
-        problem = db.session.query(Problem).filter(Problem.id == problem_id, Problem.group_id == group_id)
+        problem = db.session.query(Problem).filter(Problem.id == problem_id, Problem.homework_id == homework_id)
 
         if name is not None and problem.name != name:
             problem.name = name
 
-        if new_group_id is not None and problem.group_id != new_group_id:
-            problem.group_id = new_group_id
+        if new_homework_id is not None and problem.group_id != new_homework_id:
+            problem.group_id = new_homework_id
 
         db.session.commit()
 
@@ -134,10 +151,10 @@ def update_problems(group_id, problem_id):
 
 
 # delete
-@api.route('/groups/<int:group_id>/problems/<int:problem_id>', methods=['DELETE'])
-def delete_problems(group_id, problem_id):
+@api.route('/homeworks/<int:homework_id>/problems/<int:problem_id>', methods=['DELETE'])
+def delete_problems(homework_id, problem_id):
     try:
-        problem = db.session.query(Problem).filter(Problem.id == problem_id, Problem.group_id == group_id)
+        problem = db.session.query(Problem).filter(Problem.id == problem_id, Problem.homework_id == homework_id)
 
         try:
             db.session.delete(problem)
