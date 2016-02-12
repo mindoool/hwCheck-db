@@ -36,7 +36,7 @@ def get_user_group_relations():
     else:
         user_id = 0
 
-    if request.args.get('userId'):
+    if request.args.get('groupId'):
         group_id = int(request.args.get('groupId'))
     else:
         group_id = 0
