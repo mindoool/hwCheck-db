@@ -8,6 +8,7 @@ from . import (
     homework,
     problem,
     user,
+    user_homework_relation,
     user_group_relation,
     answer
 )
