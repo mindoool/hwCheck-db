@@ -6,6 +6,8 @@ from application import db
 from application.models.problem import Problem
 from application.models.group import Group
 from application.models.homework import Homework
+from application.models.user_group_relation import UserGroupRelation
+from application.models.user_homework_relation import UserHomeworkRelation
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
 from application.lib.rest.auth_helper import required_admin
@@ -26,42 +28,56 @@ def create_problems():
 
     problem_list = []
 
-    try:
-        for i in range(number):
-            group_id = db.session.query(Group).filter(Group.name == content[i]['data'][0]).first().id
-            homework_name = content[i]['data'][1]
-            date = content[i]['data'][2].split('-')
-            date_object = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-            problem_name = content[i]['data'][3]
+    # try:
+    for i in range(number):
+        group_id = db.session.query(Group).filter(Group.name == content[i]['data'][0]).first().id
+        homework_name = content[i]['data'][1]
+        date = content[i]['data'][2].split('-')
+        date_object = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+        problem_name = content[i]['data'][3]
 
-            # 숙제가 없는 경우 만들어주기 - name, date, group_id
-            q = db.session.query(Homework).filter(Homework.name == homework_name)
-            if q is not None:
-                homework_id = q.first().id
-            else:
-                homework = Homework(name=homework_name, date=date_object, group_id=group_id)
-                db.session.add(homework)
-                db.session.commit()
-                homework_id = homework.id
+        # 숙제가 없는 경우 만들어주기 - name, date, group_id
+        q = db.session.query(Homework).filter(Homework.name == homework_name).first()
+        if q is not None:
+            homework_id = q.id
+        else:
+            homework = Homework(name=homework_name, date=date_object, group_id=group_id)
+            db.session.add(homework)
+            db.session.commit()
+            homework_id = homework.id
+            print homework_id
+            # user-homework사이의 관계 추가
+            user_group_relations = db.session.query(UserGroupRelation).filter(UserGroupRelation.group_id == group_id)
+            print user_group_relations
+            print "aa"
+            for user_group_relation in user_group_relations:
+                print "bb"
+                if db.session.query(UserHomeworkRelation).filter(
+                                UserHomeworkRelation.user_id == user_group_relation.user_id,
+                                UserHomeworkRelation.homework_id == homework_id).first() is None:
+                    user_homework_relation = UserHomeworkRelation(user_id=user_group_relation.user_id,
+                                                                  homework_id=homework.id)
+                    db.session.add(user_homework_relation)
+                    print "cc"
 
-            # 이미 동일한 문제가 있을 경우 아무짓도 안하도록
-            problem = db.session.query(Problem).filter(Problem.group_id == group_id, Problem.name == problem_name,
-                                                       Problem.date == date_object).first()
-            # 문제 만들기 - name, homework_id
-            if problem is None:
-                problem = Problem(name=problem_name, homework_id=homework_id)
-                problem_list.append(problem)
+        # 이미 동일한 문제가 있을 경우 아무짓도 안하도록
+        problem = db.session.query(Problem).filter(Problem.homework_id == homework_id,
+                                                   Problem.name == problem_name).first()
+        # 문제 만들기 - name, homework_id
+        if problem is None:
+            problem = Problem(name=problem_name, homework_id=homework_id)
+            problem_list.append(problem)
 
-        db.session.add_all(problem_list)
-        db.session.commit()
+    db.session.add_all(problem_list)
+    db.session.commit()
 
-        return jsonify(
-            data=[problem.serialize() for problem in problem_list]
-        ), 201
-    except:
-        return jsonify(
-            userMessage="문제 등록에 실패하였습니다."
-        ), 403
+    return jsonify(
+        data=[problem.serialize() for problem in problem_list]
+    ), 201
+    # except:
+    #     return jsonify(
+    #         userMessage="문제 등록에 실패하였습니다."
+    #     ), 403
 
 
 # read

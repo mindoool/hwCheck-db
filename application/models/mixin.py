@@ -49,11 +49,18 @@ class SerializableModelMixin(object):
         return d
 
     @staticmethod
-    def serialize_row(joined_rows_tuple, main_resource_index=0):
-        l = list(joined_rows_tuple)  # immutable to mutable
-        main_resource = l.pop(main_resource_index)
-        d = main_resource.serialize()
+    def serialize_row(joined_resource_tuple, main_resource_index=0):
+        resource_tuple = joined_resource_tuple
+        l = list(resource_tuple)  # immutable to mutable l = [user, sem, team]
+        main_resource = l.pop(main_resource_index)  # l = [ sem, team]
+        d = main_resource.serialize()  # d = {user ..}
         for row in l:
+            if row is None:
+                continue
+
+            if not hasattr(row, '__table__'): #테이블이 아니라 컬럼일 떄
+                continue
+
             key = SerializableModelMixin.to_camelcase(row.__table__.name)
             d[key] = row.serialize() if row is not None else None
 

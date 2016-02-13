@@ -2,6 +2,7 @@
 from application import db
 from application.models.user import User
 from application.models.problem import Problem
+from application.models.homework import Homework
 from application.models.mixin import TimeStampMixin
 from application.models.mixin import SerializableModelMixin
 
@@ -16,10 +17,11 @@ class Answer(db.Model, TimeStampMixin, SerializableModelMixin):
 
     @classmethod
     def get_query(cls, filter_condition=None):
-        q = db.session.query(cls, User, Problem)
+        q = db.session.query(cls, User, Problem, Homework).outerjoin(User, User.id == cls.user_id) \
+            .outerjoin(Problem, Problem.id == cls.problem_id) \
+            .outerjoin(Homework, Homework.id == Problem.homework_id)
 
         if filter_condition is not None:
             q = q.filter(filter_condition)
 
-        return q.join(User, User.id == cls.user_id) \
-            .join(Problem, Problem.id == cls.problem_id)
+        return q

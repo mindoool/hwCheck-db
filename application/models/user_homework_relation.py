@@ -12,7 +12,7 @@ class UserHomeworkRelation(db.Model, TimeStampMixin, SerializableModelMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', foreign_keys=[user_id])
     homework_id = db.Column(db.Integer, db.ForeignKey('homework.id'))
-    homework = db.relationship('Group', foreign_keys=[homework_id])
+    homework = db.relationship('Homework', foreign_keys=[homework_id])
     is_submitted = db.Column(db.Boolean, default=False)
 
     @classmethod

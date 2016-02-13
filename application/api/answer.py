@@ -77,29 +77,44 @@ def get_answers():
     else:
         user_id = 0
 
-    if request.args.get('problemId'):
-        problem_id = int(request.args.get('problemId'))
+    if request.args.get('homeworkId'):
+        homework_id = int(request.args.get('homeworkId'))
+        problems = db.session.query(Problem).filter(Problem.homework_id == homework_id).order_by(Problem.id)
     else:
-        problem_id = 0
+        homework_id = 0
+        problems = db.session.query(Problem).order_by(Problem.id)
 
-    print user_id
-    print problem_id
+    if user_id >= 1 and homework_id >= 1:
+        filter_condition = (Answer.user_id == user_id, Problem.homework_id == homework_id)
 
-    if user_id >= 1 and problem_id >= 1:
-        filter_condition = (Answer.user_id == user_id, Answer.problem_id == problem_id)
-
-    elif user_id >= 1 >= problem_id:
+    elif user_id >= 1 >= homework_id:
         filter_condition = (Answer.user_id == user_id)
-    elif problem_id >= 1 >= user_id:
-        filter_condition = (Answer.problem_id == problem_id)
+    elif homework_id >= 1 >= user_id:
+        filter_condition = (Problem.homework_id == homework_id)
     else:
         filter_condition = None
-    # filter_condition = None
 
-    answer = Answer.get_query(filter_condition=filter_condition)
+    answers = Answer.get_query(filter_condition=filter_condition).order_by(Answer.user_id, Answer.problem_id)
+
+    prev_user_id = None
+    prev_problem_id = None
+    return_object = {}
+    answer_object = {}
+    for row in answers:
+        print "a"
+        (answer, user, problem, homework) = row
+        if prev_user_id != user.id:
+            return_object[user.name] = []
+            prev_user_id = user.id
+            print "b"
+        return_object[user.name].append(SerializableModelMixin.serialize_row(row))
+
+    # 문제 목록 쫙 호출하기
+    return_object['problems'] = map(lambda x: x.serialize(), problems)
 
     return jsonify(
-        data=map(SerializableModelMixin.serialize_row, answer)
+        # data=map(SerializableModelMixin.serialize_row, answer)
+        data = return_object
     ), 200
 
 

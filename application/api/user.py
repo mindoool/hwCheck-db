@@ -4,6 +4,10 @@ from . import api
 from application import db
 from application.models.user import User
 from application.models.user_group_relation import UserGroupRelation
+from application.models.user_homework_relation import UserHomeworkRelation
+from application.models.homework import Homework
+from application.models.problem import Problem
+from application.models.answer import Answer
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
 from application.lib.encript.encript_helper import password_encode
@@ -137,10 +141,52 @@ def get_users():
     ), 200
 
 
+# read user-relation-homework-problem-answer
+@api.route('/users-answers', methods=['GET'])
+# @required_token
+def get_users_answers():
+    homework_id = request.args.get('homeworkId')
+    if homework_id is not None:
+        filter_condition = (Homework.id == homework_id)
+    else:
+        filter_condition = None
+    q = db.session.query(User, UserHomeworkRelation, Homework, Problem, Answer) \
+        .outerjoin(UserHomeworkRelation, UserHomeworkRelation.user_id == User.id) \
+        .outerjoin(Homework, Homework.id == UserHomeworkRelation.homework_id) \
+        .outerjoin(Problem, Problem.homework_id == Homework.id) \
+        .outerjoin(Answer, Answer.problem_id == Problem.id) \
+        .order_by(Problem.id, User.id) \
+        .filter(filter_condition)
+
+    prev_user_id = None
+    user_object = {}
+    problem_object = {}
+    for row in q:
+        (user, user_homework_relation, homework, problem, answer) = row
+
+        if prev_user_id != user.id:
+            # user_object['problems'] = problem_object
+            # user_list.append(user_object)
+            user_object[user.id] = user.serialize()
+            prev_user_id = user.id
+
+        problem_object[problem.id] = problem.serialize()
+        if answer is not None:
+            problem_object[problem.id]['answer'] = answer.serialize()
+
+        user_object[user.id]['problems'] = problem_object
+        # user_object['problems'].append(problem_object)
+
+    return jsonify(
+        # data=map(SerializableModelMixin.serialize_row, q)
+        data=user_object
+    )
+
+
 # update
 @api.route('/users/<int:user_id>', methods=['PUT'])
 @required_token
-def update_user(user_id, request_user_id=None):   # request_user_id 형식은 어디서 가져오는지?
+def update_user(user_id, request_user_id=None):  # request_user_id 형식은 어디서 가져오는지?
     try:
         request_user = db.session.query(User).get(request_user_id)
     except:
