@@ -110,30 +110,6 @@ def get_problems(homework_id=0):
 
     q = Problem.get_query(filter_condition=filter_condition)
 
-    # start date end date 처리
-    if request.args.get('date1') is None:
-        date1 = datetime.date.today()
-        print request.args.get('date')
-    else:
-        date1 = datetime.datetime.strptime(request.args.get('date1'), "%Y-%m-%d")
-        print request.args.get('date1')
-
-    if request.args.get('date2') is None:
-        date2 = datetime.date.today()
-        print request.args.get('date')
-    else:
-        date2 = datetime.datetime.strptime(request.args.get('date2'), "%Y-%m-%d")
-        print request.args.get('date2')
-
-    q = q.filter(Problem.date.between(date1, date2))
-
-    # if request.args.get('group') is not None:
-    #     if request.args.get('group') =="":
-    #         pass
-    #     else:
-    #         group_id = db.session.query(Group).filter(Group.name == request.args.get('group')).one().id
-    #         q = q.filter(Problem.group_id == group_id)
-
     return jsonify(
         data=map(SerializableModelMixin.serialize_row, q)
     ), 200
