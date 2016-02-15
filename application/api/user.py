@@ -155,31 +155,27 @@ def get_users_answers():
         .outerjoin(Homework, Homework.id == UserHomeworkRelation.homework_id) \
         .outerjoin(Problem, Problem.homework_id == Homework.id) \
         .outerjoin(Answer, Answer.problem_id == Problem.id) \
-        .order_by(Problem.id, User.id) \
+        .order_by(User.id, Problem.id) \
         .filter(filter_condition)
 
     prev_user_id = None
-    user_object = {}
-    problem_object = {}
+    user_list= []
+    current_user_object = None
     for row in q:
         (user, user_homework_relation, homework, problem, answer) = row
-
         if prev_user_id != user.id:
-            # user_object['problems'] = problem_object
-            # user_list.append(user_object)
-            user_object[user.id] = user.serialize()
+            current_user_object = user.serialize()
+            current_user_object['problems'] = []
+            user_list.append(current_user_object)
             prev_user_id = user.id
 
-        problem_object[problem.id] = problem.serialize()
+        problem_object = problem.serialize()
         if answer is not None:
-            problem_object[problem.id]['answer'] = answer.serialize()
-
-        user_object[user.id]['problems'] = problem_object
-        # user_object['problems'].append(problem_object)
+            problem_object['answer'] = answer.serialize()
+        current_user_object['problems'].append(problem_object)
 
     return jsonify(
-        # data=map(SerializableModelMixin.serialize_row, q)
-        data=user_object
+        data=user_list
     )
 
 

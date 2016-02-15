@@ -17,11 +17,11 @@ class UserHomeworkRelation(db.Model, TimeStampMixin, SerializableModelMixin):
 
     @classmethod
     def get_query(cls, filter_condition=None):
-        q = db.session.query(cls, User, Homework, Group)
+        q = db.session.query(Homework, cls, Group)
 
         if filter_condition is not None:
             q = q.filter(filter_condition)
 
-        return q.join(User, User.id == cls.user_id) \
-            .join(Homework, Homework.id == cls.homework_id)\
-            .join(Group, Group.id == Homework.group_id)
+        return q.outerjoin(cls, cls.homework_id == Homework.id) \
+            .outerjoin(Group, Group.id == Homework.group_id) \
+            .order_by(cls.is_submitted, Homework.date, Group.id)

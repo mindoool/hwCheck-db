@@ -3,6 +3,7 @@ from flask import request, jsonify
 from . import api
 from application import db
 from application.models.user_homework_relation import UserHomeworkRelation
+from application.models.group import Group
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
 from application.lib.rest.auth_helper import required_admin
@@ -53,6 +54,11 @@ def get_user_homework_relations():
     print filter_condition
 
     user_homework_relations = UserHomeworkRelation.get_query(filter_condition=filter_condition)
+
+    for row in user_homework_relations:
+        (user_homework, homework, group) = row
+
+
 
     return jsonify(
         data=map(SerializableModelMixin.serialize_row, user_homework_relations)

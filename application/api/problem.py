@@ -108,10 +108,16 @@ def get_problems(homework_id=0):
 
     # group_id 가지고도 filter condition 넣는게 필요하지 않을까...
 
-    q = Problem.get_query(filter_condition=filter_condition)
+    # q = Problem.get_query(filter_condition=filter_condition)
+    q = db.session.query(Problem).filter(filter_condition)
+    homework = db.session.query(Homework).get(homework_id)
+
+    return_data = {}
+    return_data['problems'] = map(lambda x: x.serialize(), q)
+    return_data['homework'] = homework.serialize()
 
     return jsonify(
-        data=map(SerializableModelMixin.serialize_row, q)
+        data=return_data
     ), 200
 
 

@@ -17,9 +17,9 @@ class Problem(db.Model, TimeStampMixin, SerializableModelMixin):
 
     @classmethod
     def get_query(cls, filter_condition=None):
-        q = db.session.query(cls, Homework, Group, User)
+        q = db.session.query(cls, Homework)
 
         if filter_condition is not None:
             q = q.filter(filter_condition)
 
-        return q.join(Homework, Homework.id == cls.homework_id)
+        return q.outerjoin(Homework, Homework.id == cls.homework_id)
