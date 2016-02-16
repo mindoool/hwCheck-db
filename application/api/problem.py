@@ -6,6 +6,7 @@ from application import db
 from application.models.problem import Problem
 from application.models.group import Group
 from application.models.homework import Homework
+from application.models.answer import Answer
 from application.models.user_group_relation import UserGroupRelation
 from application.models.user_homework_relation import UserHomeworkRelation
 from application.models.mixin import SerializableModelMixin
@@ -97,8 +98,8 @@ def get_problem_by_id(homework_id, problem_id):
 
 # read
 @api.route('/homeworks/<int:homework_id>/problems', methods=['GET'])
-# @required_token
-def get_problems(homework_id=0):
+@required_token
+def get_problems(homework_id=0, request_user_id=None):
     group_id = request.args.get('groupId', 0)
 
     if homework_id != 0:
@@ -108,16 +109,11 @@ def get_problems(homework_id=0):
 
     # group_id 가지고도 filter condition 넣는게 필요하지 않을까...
 
-    # q = Problem.get_query(filter_condition=filter_condition)
-    q = db.session.query(Problem).filter(filter_condition)
-    homework = db.session.query(Homework).get(homework_id)
-
-    return_data = {}
-    return_data['problems'] = map(lambda x: x.serialize(), q)
-    return_data['homework'] = homework.serialize()
-
+    q = db.session.query(Problem, Answer).outerjoin(Answer,
+                                                    (Answer.problem_id == Problem.id) & (
+                                                        Answer.user_id == request_user_id)).filter(filter_condition)
     return jsonify(
-        data=return_data
+        data=map(SerializableModelMixin.serialize_row, q)
     ), 200
 
 

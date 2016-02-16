@@ -3,8 +3,8 @@ from flask import request, jsonify
 from . import api
 from application import db
 from application.models.answer import Answer
-from application.models.user import User
 from application.models.problem import Problem
+from application.models.user_homework_relation import UserHomeworkRelation
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
 from application.lib.rest.auth_helper import required_admin
@@ -12,43 +12,60 @@ from application.lib.rest.auth_helper import required_admin
 
 # create
 @api.route('/answers', methods=['POST'])
-def create_answers():
+@required_token
+def create_answers(request_user_id=None):
     request_params = request.get_json()
-    problem_id = request_params.get('problemId')
-    user_id = request_params.get('userId')
-    content = request_params.get('content')
-
+    problem_answer_list = request_params.get('problemAnswers')
+    homework_id = request_params.get('homeworkId')
 
     # TODO  regex, password validation need
-    if content is None:
+    if problem_answer_list is None:
         return jsonify(
-            userMessage="답을 입력해주세요."
+            userMessage="입력된 답이 없습니다."
         ), 400
 
-    q = db.session.query(Answer).filter(Answer.content == content, Answer.problem_id == problem_id,
-                                        Answer.user_id == user_id)
+    # 답 한번에 add할 때 사용할 리스트
+    answer_list = []
 
-    if q.count() > 0:
+    for problem_answer in problem_answer_list:
+        print problem_answer
+        if problem_answer["answer"] == "":
+            return jsonify(
+                userMessage="답안 입력이 안됐습니다."
+            ), 400
+
+        q = db.session.query(Answer).filter(Answer.problem_id == problem_answer["id"],
+                                            Answer.user_id == request_user_id)
+        if q.count() > 0:
+            return jsonify(
+                userMeesage="이미 등록된 답입니다."
+            ), 409
+
+        try:
+            answer = Answer(problem_id=problem_answer['id'], user_id=request_user_id,
+                            content=problem_answer['answer']['content'].strip())
+            answer_list.append(answer)
+        except:
+            return jsonify(
+                userMessage="답안 등록에 실패하였습니다."
+            )
+
+    db.session.add_all(answer_list)
+
+    user_homework = db.session.query(UserHomeworkRelation).filter(UserHomeworkRelation.user_id == request_user_id,
+                                                                  UserHomeworkRelation.homework_id == homework_id).first()
+    if user_homework is None:
         return jsonify(
-            userMeesage="이미 등록된 답입니다."
-        ), 409
+            userMessage="해당 숙제가 맞는지 확인해 보세요."
+        )
 
-    try:
-        for key in request_params.keys():
-            request_params[SerializableModelMixin.to_snakecase(key)] = request_params.pop(key)
+    user_homework.is_submitted = True
 
-        answer = Answer(**request_params)
+    db.session.commit()
 
-        db.session.add(answer)
-        db.session.commit()
-
-        return jsonify(
-            data=answer.serialize()
-        ), 200
-    except:
-        return jsonify(
-            userMessage="답안 등록에 실패하였습니다."
-        ), 403
+    return jsonify(
+        data=[answer.serialize() for answer in answer_list]
+    ), 201
 
 
 # read
@@ -114,7 +131,7 @@ def get_answers():
 
     return jsonify(
         # data=map(SerializableModelMixin.serialize_row, answer)
-        data = return_object
+        data=return_object
     ), 200
 
 

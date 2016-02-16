@@ -154,12 +154,14 @@ def get_users_answers():
         .outerjoin(UserHomeworkRelation, UserHomeworkRelation.user_id == User.id) \
         .outerjoin(Homework, Homework.id == UserHomeworkRelation.homework_id) \
         .outerjoin(Problem, Problem.homework_id == Homework.id) \
-        .outerjoin(Answer, Answer.problem_id == Problem.id) \
+        .outerjoin(Answer,
+                   (Answer.problem_id == Problem.id)
+                   & (Answer.user_id == User.id)) \
         .order_by(User.id, Problem.id) \
         .filter(filter_condition)
 
     prev_user_id = None
-    user_list= []
+    user_list = []
     current_user_object = None
     for row in q:
         (user, user_homework_relation, homework, problem, answer) = row
