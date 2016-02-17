@@ -1,0 +1,26 @@
+<div layout="row">
+    <div flex="10">
+        <md-checkbox class="green" ng-model="todo.completed"></md-checkbox>
+    </div>
+    <div flex="75">
+        {{todo.title}}
+    </div>
+    <div flex="20">
+        <button type="button" ng-click="$parent.deleteTodo(todo)"> &times; </button>
+    </div>
+</div>
+
+<div layout="row">
+    <div flex="5"></div>
+    <div flex="50">
+        {{hw.name}}
+    </div>
+    <div flex="20">
+        {{hw.date}}
+    </div>
+    <div flex="20">
+        <button type="button" ng-click="$parent.doHw(hw)"> &times; </button>
+        {{hw.status}}
+    </div>
+    <div flex="5"></div>
+</div>

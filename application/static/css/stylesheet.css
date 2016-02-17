@@ -1,0 +1,86 @@
+.resultNumber {
+    display: inline;
+}
+
+.course {
+    width: 20px;
+}
+
+.filterCourse {
+    display: inline-block;
+    width: 150px;
+    margin-top: 34px;
+}
+
+.filter {
+    margin-top: 10px;
+}
+
+.logo {
+    width: 90%;
+    margin-top: 10px;
+}
+
+.username {
+    margin: auto;
+    width: 80%;
+    text-align: center;
+}
+
+.top {
+    margin:10px;
+}
+
+.center {
+    margin: auto;
+    width: 80%;
+    text-align: center;
+}
+
+.navbar {
+    background-color: pink;
+    color:white;
+}
+
+.contentBody {
+    margin-left: 10px;
+}
+
+.toolbar-name {
+    min-height: 35px;
+    border-bottom: 1px solid darkgrey;
+    color : hotpink;
+}
+
+.toolbar-text {
+    height: 35px;
+    color: hotpink;
+    background-color: white;
+}
+
+.give-hw {
+    min-height : 24px;
+    min-width : 65px;
+    line-height: 0;
+
+}
+
+.site-content-toolbar {
+    background-color: #f6f6f6;
+    color: black;
+    position: relative;
+    z-index: 3;
+    padding-left: 10px;
+}
+
+.text-left {
+    margin-left: 10px;
+}
+
+.md-button {
+    min-width: 40px;
+}
+
+body {
+    color : darkgrey;
+}

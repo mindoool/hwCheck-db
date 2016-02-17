@@ -1,0 +1,26 @@
+<md-dialog flex="50">
+    <md-content class="autoScroll">
+        <md-list-item layout="row">
+            <span flex="25">이름</span>
+            <span flex="25">반명</span>
+            <span flex="25">과정명</span>
+            <span flex="25">편집</span>
+        </md-list-item>
+        <md-divider></md-divider>
+            <span ng-repeat="user in dialogGroupCourseUserObj.users">
+                <md-list-item layout="row">
+                    <span flex="25">{{user.name}}</span>
+                    <span flex="25">{{dialogGroupCourseUserObj.name}}</span>
+                    <span flex="25">{{dialogGroupCourseUserObj.course.name}}</span>
+                    <md-select ng-model="user.selectedGroupId" class="filterCourse" placeholder="반선택">
+                        <md-option ng-repeat="group in groupList" ng-value="group.id">
+                            {{group.name}}
+                        </md-option>
+                    </md-select>
+                    <md-button type="submit" class="md-raised md-block" ng-click="editGroupCourseUser(user)">Submit</md-button>
+                </md-list-item>
+            </span>
+
+        <md-button ng-click="cancel()" class="md-raised md-block">Close</md-button>
+    </md-content>
+</md-dialog>

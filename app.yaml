@@ -1,4 +1,4 @@
-application: hwcheck
+application: hwcheck-1224
 version: 1
 runtime: python27
 api_version: 1
@@ -13,6 +13,13 @@ libraries:
   version: "2.6"
 - name: markupsafe
   version: "0.15"
+- name: MySQLdb
+  version: "latest"
 
-
-env_variables:
+skip_files:
+- ^(\.git/.*)$
+- ^(venv/lib/python2.7/site-packages/MySQL.*)
+- ^(\.idea/.*)$
+- deploy
+- ^(.*/)?.*\.DS_Store$
+- ^(.*/)?.*\.py[co]$

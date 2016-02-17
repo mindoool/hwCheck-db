@@ -1,0 +1,39 @@
+<md-dialog flex="70">
+    <form>
+        <div layout="column" width="80%">
+            <div flex>
+                <div layout="row">
+                    <div flex="5"></div>
+                    <div flex="45"> {{homeworkObj.name}}</div>
+                    <div flex="30"> 제출기한 : {{homeworkObj.date}}</div>
+                </div>
+            </div>
+            <div layout="row" ng-repeat="problem in problemList">
+                <div flex="5"></div>
+                <div flex="30" class="top">
+                    {{$index + 1}}. {{problem.name}}
+                </div>
+                <div flex="30">
+                    <md-input-container required>
+                        <md-select ng-model="problem.answer.content" placeholder="Select Answer" requried>
+                            <md-option ng-value="option" ng-repeat="option in answerOptions">
+                                {{option}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+            </div>
+            <div flex>
+                <div layout="row">
+                    <div flex="50">
+                        <md-button type="submit" ng-if="!problem.answer.id" class="md-raised md-block" ng-click="submit()">Submit</md-button>
+                        <md-button type="submit" ng-if="problem.answer.id" class="md-raised md-block" ng-click="edit()">Edit</md-button>
+                    </div>
+                    <div flex="50">
+                        <md-button class="md-raised md-block" ng-click="cancel()"> Close</md-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</md-dialog>

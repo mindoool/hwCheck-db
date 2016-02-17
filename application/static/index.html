@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>B&L Homework</title>
+
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+    <link href='https://fonts.googleapis.com/css?family=Abril+Fatface' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/stylesheet.css">
+</head>
+<body ng-app="HwCheck">
+
+<div layout="row">
+    <div flex="15" class="navbar">
+        <div class="center"><img src="img/logo.png" class="logo"/></div>
+        <md-list>
+            <md-list-item>
+                <p class="username"> {{$root.user.name}}</p>
+            </md-list-item>
+            <md-list-item ng-show="!$root.token">
+                <md-button class="center" ng-href="#/login">Login</md-button>
+            </md-list-item>
+            <md-list-item ng-show="$root.token">
+                <md-button class="center" ng-click="$root.logout()">Logout</md-button>
+            </md-list-item>
+            <md-list-item ng-show="$root.user.isAdmin == 1">
+                <md-button class="center" ng-href="#/admin"> 어드민 </md-button>
+            </md-list-item>
+            <md-list-item>
+                <md-button class="center" ng-href="#/"> 메인화면 </md-button>
+            </md-list-item>
+        </md-list>
+    </div>
+    <div flex="85" layout="column">
+        <ui-view></ui-view>
+    </div>
+</div>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+<script data-require="jquery@*" data-semver="2.1.1"
+        src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/config.js"></script>
+<script src="js/controllers/LoginController.js"></script>
+<script src="js/controllers/HwListController.js"></script>
+<script src="js/controllers/AdminController.js"></script>
+<script src="js/controllers/CourseController.js"></script>
+<script src="js/controllers/GroupController.js"></script>
+<script src="js/controllers/UserController.js"></script>
+<script src="js/directives/hw.js"></script>
+<script src="js/directives/fileReader.js"></script>
+<script src="js/services/Storage.js"></script>
+<script src="js/services/Obj.js"></script>
+</body>
+</html>

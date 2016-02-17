@@ -1,0 +1,1 @@
+host = "http://hwcheck-1224.appspot.com/api";

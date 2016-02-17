@@ -31,6 +31,7 @@ def get_user_group_relation_by_id(user_group_relation_id):
 @api.route('/user-group-relations', methods=['GET'])
 # @required_token
 def get_user_group_relations():
+    request_params = request.get_json()
     if request.args.get('userId') is not None:
         user_id = int(request.args.get('userId'))
     else:
@@ -50,14 +51,28 @@ def get_user_group_relations():
         filter_condition = (UserGroupRelation.group_id == group_id)
     else:
         filter_condition = None
-    # filter_condition = None
-
-    print filter_condition
 
     user_group_relations = UserGroupRelation.get_query(filter_condition=filter_condition)
 
+    prev_group_id = None
+    group_obj = {}
+    user_object = {}
+    for row in user_group_relations:
+        (group, course, user_group, user) = row
+        if prev_group_id != group.id:
+            group_id = group.id
+            group_obj[group_id] = group.serialize()
+            group_obj[group_id]['course'] = course.serialize()
+            group_obj[group_id]['users'] = []
+            prev_group_id = group_id
+        if user is not None:
+            user_object = user.serialize()
+            user_object['userGroup'] = user_group.serialize()
+            group_obj[group_id]['users'].append(user_object)
+
     return jsonify(
-        data=map(SerializableModelMixin.serialize_row, user_group_relations)
+        data=group_obj.values()
+        # data = map(SerializableModelMixin.serialize_row, user_group_relations)
     ), 200
 
 

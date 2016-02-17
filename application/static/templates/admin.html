@@ -1,0 +1,155 @@
+<div layout="column">
+    <md-toolbar class="toolbar-name">
+        <div class="md-whiteframe-glow-z1 site-content-toolbar">
+            <h3>
+                <span>Admin</span>
+            </h3>
+        </div>
+    </md-toolbar>
+    <div flex="95" class="top">
+        <md-toolbar class="toolbar-name">
+            <div class="md-toolbar-tools toolbar-text">
+                <h5>
+                    <span>과제 목록</span>
+                </h5>
+                <span flex></span>
+                <md-button class="md-raised give-hw" ng-click="giveHw($event)"> 과제출제</md-button>
+            </div>
+        </md-toolbar>
+        <form ng-submit="getHwList()">
+            <div layout="row">
+                <div flex="20">
+                    <md-select ng-model="selectedCourse" class="filterCourse" placeholder="과정선택">
+                        <md-option ng-repeat="(key, value) in courseObj" ng-value="value">
+                            {{value.name}}
+                        </md-option>
+                    </md-select>
+                </div>
+                <div flex="20">
+                    <md-select ng-model="targetGroup" class="filterCourse" placeholder="반선택">
+                        <md-option ng-repeat="group in selectedCourse.groups" value="{{group.id}}">
+                            {{group.name}}
+                        </md-option>
+                    </md-select>
+                </div>
+                <div flex="20" class="filter">
+                    <span>Start Date</span>
+                    <md-datepicker ng-model="datepicker.date1"></md-datepicker>
+                </div>
+                <div flex="20" class="filter">
+                    <span>End Date</span>
+                    <md-datepicker ng-model="datepicker.date2"></md-datepicker>
+                </div>
+                <div flex="20" class="filter">
+                    <md-button class="md-raised md-block" ng-click="getHwList()"> Submit</md-button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div flex>
+        <div ng-repeat="(key, value) in homeworkObj">
+            <md-button ng-disabled="true" class="md-raised md-primary"> {{key}}</md-button>
+            <div layout="row" class="top">
+                <div flex="20">과정명</div>
+                <div flex="20">그룹명</div>
+                <div flex="20">과제명</div>
+                <div flex="20">제출자</div>
+                <div flex="20">결과보기</div>
+            </div>
+            <div ng-repeat="homework in value" layout="row" class="top">
+                <div flex="20">{{homework.course.name}}</div>
+                <div flex="20">{{homework.group.name}}</div>
+                <div flex="20">{{homework.name}}</div>
+                <div flex="20">{{homework.users.isSubmitted}} / {{homework.users.count}}</div>
+                <div flex="20">
+                    <md-button ng-click="getResult($event, homework)"> 결과</md-button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <md-divider></md-divider>
+    <br>
+
+    <div flex layout="row">
+        <div flex="25" class="top" ng-controller="CourseController">
+            <md-toolbar class="toolbar-name">
+                <div class="md-toolbar-tools toolbar-text">
+                    <h5>
+                        <span>과목 관리</span>
+                    </h5>
+                </div>
+            </md-toolbar>
+            <md-list>
+                <md-list-item layout="row">
+                    <span flex="25">과정명</span>
+                    <span flex="50"></span>
+                    <span flex="25">편집</span>
+                </md-list-item>
+                <md-divider></md-divider>
+                <md-list-item ng-repeat="course in courseList" layout="row">
+                    <span flex="35" class="text-left"> {{course.name}} </span>
+                    <span flex="10"></span>
+                    <md-button flex="25" ng-click="editCourseDialog($event, course)">Edit</md-button>
+                    <md-button flex="30" ng-click="deleteCourse(course.id)">Delete</md-button>
+                </md-list-item>
+                <md-list-item>
+                    <md-button class="center" ng-click="createCourseDialog($event)">+</md-button>
+                </md-list-item>
+            </md-list>
+        </div>
+        <div flex="40" class="top" ng-controller="GroupController">
+            <md-toolbar class="toolbar-name">
+                <div class="md-toolbar-tools toolbar-text">
+                    <h5>
+                        <span>반 관리</span>
+                    </h5>
+                </div>
+            </md-toolbar>
+            <md-list>
+                <md-list-item layout="row">
+                    <span flex="25">반명</span>
+                    <span flex="25">과정명</span>
+                    <span flex="25"></span>
+                    <span flex="25">편집</span>
+                </md-list-item>
+                <md-divider></md-divider>
+                <md-list-item ng-repeat="group in groupList" layout="row">
+                    <span flex="25" class="text-left"> {{group.name}} </span>
+                    <span flex="25" class="text-left"> {{group.course.name}}</span>
+                    <md-button flex="25" ng-click="editGroupDialog($event, group)">Edit</md-button>
+                    <md-button flex="25" ng-click="deleteGroup(group)">Delete</md-button>
+                </md-list-item>
+                <md-list-item>
+                    <md-button class="center" ng-click="createGroupDialog($event)">+</md-button>
+                </md-list-item>
+            </md-list>
+        </div>
+        <div flex="35" class="top" ng-controller="UserController">
+            <md-toolbar class="toolbar-name">
+                <div class="md-toolbar-tools toolbar-text">
+                    <h5>
+                        <span>학생 관리</span>
+                    </h5>
+                </div>
+            </md-toolbar>
+            <md-list>
+                <md-list-item layout="row">
+                    <span flex="25">반명</span>
+                    <span flex="25">과정명</span>
+                    <span flex="25">학생수</span>
+                    <span flex="25">편집</span>
+                </md-list-item>
+                <md-divider></md-divider>
+                <md-list-item ng-repeat="groupCourseUser in groupCourseUserList" ng-if="groupCourseUser.users.length>0"
+                              layout="row">
+                    <span flex="25">{{groupCourseUser.name}}</span>
+                    <span flex="25">{{groupCourseUser.course.name}}</span>
+                    <span flex="25">{{groupCourseUser.users.length}}</span>
+                    <md-button flex="25" ng-click="editUserDialog($event, groupCourseUser)">Edit</md-button>
+                </md-list-item>
+            </md-list>
+        </div>
+    </div>
+</div>

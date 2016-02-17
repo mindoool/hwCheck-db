@@ -1,0 +1,22 @@
+<md-dialog flex="30">
+    <form ng-submit="createGroup()">
+        <md-content class="autoScroll">
+            <md-input-container class="md-block">
+                <input ng-model="group.name" type="text" placeholder="반명" ng-required="true">
+                <div ng-messages="makeCourse.name.$error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-show="user.password !== user.passwordCheck">Does not match.</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <md-select ng-model="group.courseId" placeholder="과정">
+                    <md-option ng-repeat="course in courseList" value="{{course.id}}">
+                        <span>{{course.name}}</span>
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-button type="submit" class="md-raised md-block">Submit</md-button>
+            <md-button ng-click="hide()" class="md-raised md-block">Close</md-button>
+        </md-content>
+    </form>
+</md-dialog>

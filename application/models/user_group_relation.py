@@ -16,11 +16,16 @@ class UserGroupRelation(db.Model, TimeStampMixin, SerializableModelMixin):
 
     @classmethod
     def get_query(cls, filter_condition=None):
-        q = db.session.query(cls, User, Group, Course)
+        q = db.session.query(Group, Course, cls, User)
+
+        q = q.outerjoin(Course, Course.id == Group.course_id) \
+            .outerjoin(cls, cls.group_id == Group.id) \
+            .outerjoin(User, User.id == cls.user_id) \
+            .order_by(Group.id, Course.id, User.id)
+
+        print q
 
         if filter_condition is not None:
             q = q.filter(filter_condition)
 
-        return q.join(User, User.id == cls.user_id) \
-            .join(Group, Group.id == cls.group_id)\
-            .join(Course, Course.id == Group.course_id)
+        return q

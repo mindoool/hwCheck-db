@@ -1,0 +1,59 @@
+<md-dialog flex="70">
+    <form name="giveHw" ng-submit="giveHwSubmit()">
+        <div layout="column">
+            <div flex>
+                <input type="file" file-reader="fileContent"/>
+            </div>
+            <div layout="row">
+                <div flex="5"></div>
+                <div flex="90">
+                    <ol>
+                        <div ng-repeat="content in fileContent">
+                            <div layout="row" ng-if="$index==0">
+                                <div flex="33">
+                                    {{content.headers[0]}}
+                                </div>
+                                <div flex="33">
+                                    {{content.headers[1]}}
+                                </div>
+                                <div flex="33">
+                                    {{content.headers[2]}}
+                                </div>
+                                <div flex="33">
+                                    {{content.headers[3]}}
+                                </div>
+                            </div>
+                            <div layout="row" ng-if="$index!=0">
+                                <li>
+                                    <md-input-container flex="25">
+                                        <input type="text" value="{{content.data[0]}}" required/>
+                                    </md-input-container>
+                                    <md-input-container flex="25">
+                                        <input type="text" value="{{content.data[1]}}" required/>
+                                    </md-input-container>
+                                    <md-input-container flex="25">
+                                        <input type="text" value="{{content.data[2]}}" required/>
+                                    </md-input-container>
+                                    <md-input-container flex="25">
+                                        <input type="text" value="{{content.data[3]}}" required/>
+                                    </md-input-container>
+                                </li>
+                            </div>
+                        </div>
+                    </ol>
+                </div>
+                <div flex="5"></div>
+            </div>
+            <div flex>
+                <div layout="row">
+                    <div flex="50">
+                        <md-button type="submit" class="md-raised md-block"> Submit</md-button>
+                    </div>
+                    <div flex="50">
+                    <md-button class="md-raised md-block" ng-click="hide()"> Close</md-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</md-dialog>

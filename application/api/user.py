@@ -10,6 +10,7 @@ from application.models.problem import Problem
 from application.models.answer import Answer
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
+from application.lib.rest.auth_helper import required_admin
 from application.lib.encript.encript_helper import password_encode
 
 
@@ -92,7 +93,10 @@ def sign_up():
         ), 400
 
     # user_group_relation 추가
-    user_group_relation = UserGroupRelation(user_id=int(user.id), group_id=int(group_id))
+    if group_id != 0:
+        user_group_relation = UserGroupRelation(user_id=int(user.id), group_id=int(group_id))
+    else:
+        user_group_relation = UserGroupRelation(user_id=int(user.id))
     db.session.add(user_group_relation)
     db.session.commit()
 
@@ -183,6 +187,7 @@ def get_users_answers():
 
 # update
 @api.route('/users/<int:user_id>', methods=['PUT'])
+@required_admin
 @required_token
 def update_user(user_id, request_user_id=None):  # request_user_id 형식은 어디서 가져오는지?
     try:
@@ -191,11 +196,6 @@ def update_user(user_id, request_user_id=None):  # request_user_id 형식은 어
         return jsonify(
             userMessage="수정 요청을 보낸 유저를 찾을 수 없습니다."
         ), 404
-
-    if not (user_id == request_user.id):
-        return jsonify(
-            userMessage="해당 정보를 바꿀 권한이 없습니다."
-        ), 401
 
     try:
         user = db.session.query(User).get(user_id)
@@ -206,6 +206,7 @@ def update_user(user_id, request_user_id=None):  # request_user_id 형식은 어
 
     request_params = request.get_json()
     password = request_params.get('password')
+
 
     if password is not None:
         user.password = password

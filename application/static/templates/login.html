@@ -1,0 +1,22 @@
+<div layout="row">
+    <div flex="30"></div>
+    <div flex="40">
+        <form ng-submit="login()">
+            <md-content class="autoScroll">
+                <md-input-container class="md-block signin">
+                    <!-- Use floating placeholder instead of label -->
+                    <input ng-model="user.email" type="email" placeholder="Email (required)" ng-required="true">
+                </md-input-container>
+                <md-input-container class="md-block signin">
+                    <!-- Use floating placeholder instead of label -->
+                    <input ng-model="user.password" type="password" placeholder="Password (required)"
+                           ng-required="true">
+                </md-input-container>
+            </md-content>
+            <md-button type="submit" class="md-raised md-block">Sign in</md-button>
+        </form>
+        <br>
+        <md-button class="md-raised md-block" ng-click="signupDialog($event)"> Sign up </md-button>
+    </div>
+    <div flex="30"></div>
+</div>

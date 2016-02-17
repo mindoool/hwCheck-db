@@ -1,0 +1,15 @@
+<md-dialog flex="30">
+    <form ng-submit="editCourse()">
+        <md-content class="autoScroll">
+            <md-input-container class="md-block">
+                <input ng-model="currentCourse.name" type="text" placeholder="과정명" ng-required="true">
+                <div ng-messages="editCourse.name.$error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-show="user.password !== user.passwordCheck">Does not match.</div>
+                </div>
+            </md-input-container>
+            <md-button type="submit" class="md-raised md-block">Submit</md-button>
+            <md-button ng-click="cancel()" class="md-raised md-block">Close</md-button>
+        </md-content>
+    </form>
+</md-dialog>

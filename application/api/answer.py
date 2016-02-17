@@ -28,7 +28,6 @@ def create_answers(request_user_id=None):
     answer_list = []
 
     for problem_answer in problem_answer_list:
-        print problem_answer
         if problem_answer["answer"] == "":
             return jsonify(
                 userMessage="답안 입력이 안됐습니다."
@@ -114,9 +113,7 @@ def get_answers():
     answers = Answer.get_query(filter_condition=filter_condition).order_by(Answer.user_id, Answer.problem_id)
 
     prev_user_id = None
-    prev_problem_id = None
     return_object = {}
-    answer_object = {}
     for row in answers:
         print "a"
         (answer, user, problem, homework) = row
@@ -136,34 +133,42 @@ def get_answers():
 
 
 # update
-@api.route('/answers/<int:answer_id>', methods=['PUT'])
+@api.route('/answers', methods=['PUT'])
 # @required_admin
-def update_answer(answer_id):
+def update_answer():
     request_params = request.get_json()
-    user_id = request_params.get('userId')
-    problem_id = request_params.get('problemId')
-    content = request_params.get('content')
-    try:
-        answer = db.session.query(Answer).get(answer_id)
+    problem_answer_list = request_params.get('problemAnswers')
 
-        if user_id is not None and answer.user_id != user_id:
-            answer.user_id = user_id
-
-        if problem_id is not None and answer.problem_id != problem_id:
-            answer.problem_id = problem_id
-
-        if content is not None and answer.content != content:
-            answer.content = content
-
-        db.session.commit()
-
+    # TODO  regex, password validation need
+    if problem_answer_list is None:
         return jsonify(
-            data=answer.serialize()
-        ), 201
-    except:
-        return jsonify(
-            userMessage="해당 답안을 찾을 수 없습니다."
-        ), 404
+            userMessage="입력된 답이 없습니다."
+        ), 400
+
+    answer_list = []
+
+    for problem_answer in problem_answer_list:
+        print problem_answer
+        if problem_answer["answer"] == "":
+            return jsonify(
+                userMessage="답안 입력이 안됐습니다."
+            ), 400
+
+        # try:
+        answer = db.session.query(Answer).get(problem_answer['answer']['id'])
+        if problem_answer['answer']['content'] is not None:
+            answer.content = problem_answer['answer']['content']
+        answer_list.append(answer)
+        # except:
+        #     return jsonify(
+        #         userMessage="답안 수정에 실패하였습니다."
+        #     ), 400
+
+    db.session.commit()
+
+    return jsonify(
+        data=[answer.serialize() for answer in answer_list]
+    ), 201
 
 
 # delete
