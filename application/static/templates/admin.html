@@ -50,7 +50,7 @@
     <div flex>
         <div ng-repeat="(key, value) in homeworkObj">
             <md-button ng-disabled="true" class="md-raised md-primary"> {{key}}</md-button>
-            <div layout="row" class="top">
+            <div layout="row" class="hw-list-title">
                 <div flex="20">과정명</div>
                 <div flex="20">그룹명</div>
                 <div flex="20">과제명</div>
@@ -58,10 +58,10 @@
                 <div flex="20">결과보기</div>
             </div>
             <div ng-repeat="homework in value" layout="row" class="top">
-                <div flex="20">{{homework.course.name}}</div>
-                <div flex="20">{{homework.group.name}}</div>
-                <div flex="20">{{homework.name}}</div>
-                <div flex="20">{{homework.users.isSubmitted}} / {{homework.users.count}}</div>
+                <div flex="20" class="hw-list">{{homework.course.name}}</div>
+                <div flex="20" class="hw-list">{{homework.group.name}}</div>
+                <div flex="20" class="hw-list">{{homework.name}}</div>
+                <div flex="20" class="hw-list">{{homework.users.isSubmitted}} / {{homework.users.count}}</div>
                 <div flex="20">
                     <md-button ng-click="getResult($event, homework)"> 결과</md-button>
                 </div>
@@ -137,16 +137,16 @@
             <md-list>
                 <md-list-item layout="row">
                     <span flex="25">반명</span>
-                    <span flex="25">과정명</span>
-                    <span flex="25">학생수</span>
-                    <span flex="25">편집</span>
+                    <span flex="30">과정명</span>
+                    <span flex="30">학생수</span>
+                    <span flex="15">편집</span>
                 </md-list-item>
                 <md-divider></md-divider>
                 <md-list-item ng-repeat="groupCourseUser in groupCourseUserList" ng-if="groupCourseUser.users.length>0"
                               layout="row">
                     <span flex="25">{{groupCourseUser.name}}</span>
                     <span flex="25">{{groupCourseUser.course.name}}</span>
-                    <span flex="25">{{groupCourseUser.users.length}}</span>
+                    <span flex="25" class="username">{{groupCourseUser.users.length}}</span>
                     <md-button flex="25" ng-click="editUserDialog($event, groupCourseUser)">Edit</md-button>
                 </md-list-item>
             </md-list>

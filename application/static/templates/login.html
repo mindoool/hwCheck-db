@@ -5,18 +5,18 @@
             <md-content class="autoScroll">
                 <md-input-container class="md-block signin">
                     <!-- Use floating placeholder instead of label -->
-                    <input ng-model="user.email" type="email" placeholder="Email (required)" ng-required="true">
+                    <input ng-model="user.email" type="email" placeholder="이메일 (필수)" ng-required="true">
                 </md-input-container>
                 <md-input-container class="md-block signin">
                     <!-- Use floating placeholder instead of label -->
-                    <input ng-model="user.password" type="password" placeholder="Password (required)"
+                    <input ng-model="user.password" type="password" placeholder="비밀번호 (필수)"
                            ng-required="true">
                 </md-input-container>
             </md-content>
-            <md-button type="submit" class="md-raised md-block">Sign in</md-button>
+            <md-button type="submit" class="md-raised md-block">로그인</md-button>
         </form>
         <br>
-        <md-button class="md-raised md-block" ng-click="signupDialog($event)"> Sign up </md-button>
+        <md-button class="md-raised md-block" ng-click="signupDialog($event)">회원가입</md-button>
     </div>
     <div flex="30"></div>
 </div>

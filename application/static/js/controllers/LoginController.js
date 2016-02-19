@@ -19,7 +19,7 @@ app.controller('LoginController', ['$scope', '$mdDialog', '$mdMedia', '$http', '
                 if (response.data.data.isAdmin) {
                     $state.go('admin');
                 } else {
-                    $state.go('index');
+                    $state.go('hwlist');
                 }
 
 

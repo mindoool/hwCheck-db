@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+import datetime
 from flask import request, jsonify
 from . import api
 from application import db
 from application.models.user_homework_relation import UserHomeworkRelation
-from application.models.group import Group
+from application.models.homework import Homework
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
 from application.lib.rest.auth_helper import required_admin
@@ -55,10 +56,18 @@ def get_user_homework_relations():
 
     user_homework_relations = UserHomeworkRelation.get_query(filter_condition=filter_condition)
 
-    for row in user_homework_relations:
-        (user_homework, homework, group) = row
+    # start date end date 처리
+    if request.args.get('date1') is None:
+        date1 = datetime.date.today()
+    else:
+        date1 = datetime.datetime.strptime(request.args.get('date1'), "%Y-%m-%d")
 
+    if request.args.get('date2') is None:
+        date2 = datetime.date.today()
+    else:
+        date2 = datetime.datetime.strptime(request.args.get('date2'), "%Y-%m-%d")
 
+    user_homework_relations = user_homework_relations.filter(Homework.date.between(date1, date2)).order_by(Homework.id)
 
     return jsonify(
         data=map(SerializableModelMixin.serialize_row, user_homework_relations)

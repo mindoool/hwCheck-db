@@ -3,7 +3,7 @@ var app = angular.module('HwCheck', ['ngMaterial','ngMessages','ui.router']);
 app.config(function($stateProvider, $urlRouterProvider) {
     //
     // For any unmatched url, redirect to /state1
-    $urlRouterProvider.otherwise("/");
+    $urlRouterProvider.otherwise("/hwlist");
     //
     // Now set up the states
     $stateProvider
@@ -12,10 +12,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'templates/login.html',
             controller: "LoginController"
         })
-        .state('index', {
-            url:'/',
+        .state('hwlist', {
+            url:'/hwlist',
             templateUrl: 'templates/index.html',
-            controller: "HwListController"
+            controller: "HwListController",
+            userOnly: true
         })
         .state('admin', {
             url:'/admin',
@@ -33,7 +34,13 @@ app.run(function($http, storage, $rootScope, $state) {
         //이동할 페이지에 authenticate 값이 있는지 확인해서 라우팅한다.
         if( toState.adminOnly ){
             if ($rootScope.user.isAdmin == false ) {
-                $state.go('index');
+                $state.go('hwlist');
+                event.preventDefault();
+            }
+        }
+        if( toState.userOnly ){
+            if ($rootScope.token == false ) {
+                $state.go('login');
                 event.preventDefault();
             }
         }

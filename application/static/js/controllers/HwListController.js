@@ -30,22 +30,6 @@ app.controller('HwListController', ['$scope', 'storage','$mdMedia', '$mdDialog',
         })
     };
 
-    $scope.checkHw = function(ev, homework) {
-        $mdDialog.show({
-            controller: HwContentController,
-            templateUrl: 'templates/hw-content.html',
-            parent: angular.element(document.body),
-            targetEvent: ev,
-            clickOutsideToClose:true,
-            fullscreen:true,
-            scope: $scope,
-            preserveScope: true,
-            locals: {
-                homework: homework
-            }
-        })
-    };
-
     function HwContentController($scope, $mdDialog, homework) {
         $scope.hide = function() {
             $mdDialog.hide();
@@ -56,8 +40,13 @@ app.controller('HwListController', ['$scope', 'storage','$mdMedia', '$mdDialog',
         $scope.answer = function(answer) {
             $mdDialog.hide(answer);
         };
+
         $scope.userAnswer='';
         $scope.answerOptions = ['맞음', '틀렸는데 고침', '틀렸는데 모름', '모름'];
+
+        $scope.homework = homework;
+        console.log(homework);
+
         $http.get(host + "/homeworks/"+homework.id+"/problems")
             .then(function (response) {
                 console.log(response);

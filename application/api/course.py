@@ -3,6 +3,7 @@ from flask import request, jsonify, abort
 from . import api
 from application import db
 from application.models.course import Course
+from application.models.group import Group
 from application.models.mixin import SerializableModelMixin
 from application.lib.rest.auth_helper import required_token
 
@@ -58,10 +59,29 @@ def get_course_by_id(course_id):
 # read
 @api.route('/courses', methods=['GET'])
 def get_courses():
-    q = db.session.query(Course)
+    q = db.session.query(Course, Group).outerjoin(Group, Group.course_id == Course.id).order_by(Course.id)
+
+    prev_course_id = None
+    course_list = []
+    for row in q:
+        (course, group) = row
+        if prev_course_id != course.id:
+            print "new"
+            course_obj = course.serialize()
+            course_obj['groups'] = []
+            course_list.append(course_obj)
+            prev_course_id = course.id
+
+        if group is not None:
+            print "aa"
+            print course_list
+            print group
+            course_obj['groups'].append(group.serialize())
+            print course_obj
 
     return jsonify(
-        data=map(lambda obj: obj.serialize(), q)
+        # data=map(SerializableModelMixin.serialize_row, q)
+        data=course_list
     ), 200
 
 

@@ -1,16 +1,19 @@
 <md-dialog flex="70">
     <form>
         <div layout="column" width="80%">
-            <div flex>
+            <div flex class="hw-dialog-title">
                 <div layout="row">
                     <div flex="5"></div>
-                    <div flex="45"> {{homeworkObj.name}}</div>
-                    <div flex="30"> 제출기한 : {{homeworkObj.date}}</div>
+                    <div flex="25"> 과제명 : {{homework.name}}</div>
+                    <div flex="5"></div>
+                    <div flex="25"> 반명 : {{homework.group.name}}</div>
+                    <div flex="5"></div>
+                    <div flex="25"> 제출기한 : {{homework.date}}</div>
                 </div>
             </div>
             <div layout="row" ng-repeat="problem in problemList">
                 <div flex="5"></div>
-                <div flex="30" class="top">
+                <div flex="30" class="top" style="margin-top: 30px">
                     {{$index + 1}}. {{problem.name}}
                 </div>
                 <div flex="30">
@@ -25,12 +28,13 @@
             </div>
             <div flex>
                 <div layout="row">
-                    <div flex="50">
-                        <md-button type="submit" ng-if="!problem.answer.id" class="md-raised md-block" ng-click="submit()">Submit</md-button>
-                        <md-button type="submit" ng-if="problem.answer.id" class="md-raised md-block" ng-click="edit()">Edit</md-button>
+                    <div flex="10"></div>
+                    <div flex="10">
+                        <md-button type="submit" style="width:70px" ng-if="!problemList[0].answer.id" class="md-raised md-block" ng-click="submit()">제출</md-button>
+                        <md-button type="submit" style="width:70px" ng-if="problemList[0].answer.id" class="md-raised md-block" ng-click="edit()">수정</md-button>
                     </div>
-                    <div flex="50">
-                        <md-button class="md-raised md-block" ng-click="cancel()"> Close</md-button>
+                    <div flex="10">
+                        <md-button class="md-raised md-block" style="width:70px" ng-click="cancel()">닫기</md-button>
                     </div>
                 </div>
             </div>

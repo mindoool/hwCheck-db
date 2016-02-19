@@ -3,34 +3,34 @@
         <md-content class="autoScroll">
             <md-input-container class="md-block">
                 <!-- Use floating placeholder instead of label -->
-                <input ng-model="user.email" type="email" placeholder="Email (required)" ng-required="true">
+                <input ng-model="user.email" type="email" placeholder="이메일 (필수)" ng-required="true">
             </md-input-container>
             <md-input-container class="md-block">
                 <!-- Use floating placeholder instead of label -->
-                <input ng-model="user.password" type="password" name="password" placeholder="Password (required)"
+                <input ng-model="user.password" type="password" name="password" placeholder="비밀번호 (필수)"
                        ng-required="true">
 
                 <div ng-messages="signUpForm.password.$error">
-                    <div ng-message="required">This is required.</div>
+                    <div ng-message="required">필수 입력 사항입니다.</div>
                 </div>
             </md-input-container>
             <md-input-container class="md-block">
                 <!-- Use floating placeholder instead of label -->
                 <input ng-model="user.passwordCheck" type="password" name="passwordCheck"
-                       placeholder="Password Again(required)" ng-required="true">
+                       placeholder="비밀번호 재입력 (필수)" ng-required="true">
 
-                <div ng-messages="signUpForm.passwordcheck.$error">
-                    <div ng-message="required">This is required.</div>
-                    <div ng-show="user.password !== user.passwordCheck">Does not match.</div>
+                <div ng-messages="signUpForm.passwordCheck.$error">
+                    <div ng-message="required">필수 입력 사항입니다.</div>
+                    <div ng-show="user.passwordCheck.length>0 && user.password !== user.passwordCheck">Password와 일치하지 않습니다.</div>
                 </div>
             </md-input-container>
             <md-input-container class="md-block">
                 <!-- Use floating placeholder instead of label -->
                 <input ng-model="user.name" type="text" name="name"
-                       placeholder="Name(required)" ng-required="true">
+                       placeholder="이름 (필수)" ng-required="true">
 
                 <div ng-messages="signUpForm.name.$error">
-                    <div ng-message="required">This is required.</div>
+                    <div ng-message="required">필수 입력 사항입니다.</div>
                 </div>
             </md-input-container>
             <!--<md-input-container class="md-block">-->
@@ -44,27 +44,28 @@
                 <!--</div>-->
             <!--</md-input-container>-->
             <md-input-container>
-                <md-select ng-model="selectedCourse" name="course" placeholder="과정선택" ng-required="true">
+                <md-select ng-model="selectedCourse" name="course" placeholder="과정 선택 (필수)" ng-required="true">
                     <md-option ng-repeat="(key, value) in dummyObj" ng-value="value">
                         {{value.name}}
                     </md-option>
                 </md-select>
                 <div ng-messages="signUpForm.group.$error">
-                    <div ng-message="required">This is required.</div>
+                    <div ng-message="required">필수 입력 사항입니다.</div>
                 </div>
             </md-input-container>
             <md-input-container>
-                <md-select ng-model="targetGroup" name="group" placeholder="반선택" ng-required="true">
+                <md-select ng-model="targetGroup" name="group" placeholder="반 선택 (필수)" ng-required="true">
                     <md-option ng-repeat="group in selectedCourse.groups" value="{{group.id}}">
                         {{group.name}}
                     </md-option>
                 </md-select>
                 <div ng-messages="signUpForm.group.$error">
-                    <div ng-message="required">This is required.</div>
+                    <div ng-message="required">필수 입력 사항입니다.</div>
                 </div>
             </md-input-container>
-            <md-button type="submit" class="md-raised md-block">Submit</md-button>
-            <md-button ng-click="cancel()" class="md-raised md-block">Close</md-button>
+            <br>
+            <md-button type="submit" class="md-raised md-block">제출</md-button>
+            <md-button ng-click="cancel()" class="md-raised md-block">닫기</md-button>
         </md-content>
     </form>
 </md-dialog>
