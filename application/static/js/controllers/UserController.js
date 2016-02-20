@@ -1,4 +1,4 @@
-app.controller('UserController', ['$scope', 'storage', '$mdMedia', '$mdDialog', '$http', '$filter', function ($scope, storage, $mdMedia, $mdDialog, $http, $filter) {
+app.controller('UserController', ['$scope', 'storage', '$mdMedia', '$mdDialog', '$http', '$filter', 'CommonData', function ($scope, storage, $mdMedia, $mdDialog, $http, $filter, CommonData) {
 
     //userGroup불러오기
     $scope.userGroupList = [];
@@ -7,7 +7,6 @@ app.controller('UserController', ['$scope', 'storage', '$mdMedia', '$mdDialog', 
 
     $scope.selectedGroup = null;
     $scope.targetGroup = 0;
-    $scope.courseObj = {};
     $scope.groupObj = {};
     $scope.groupCourseUserList = [];
 
@@ -60,15 +59,19 @@ app.controller('UserController', ['$scope', 'storage', '$mdMedia', '$mdDialog', 
 
         $scope.dialogGroupCourseUserObj = obj;
 
-        $scope.getGroup = function () {
-            $http.get(host + "/courses/" + $scope.dialogGroupCourseUserObj.course.id + "/groups")
-                .then(function (response) {
-                    console.log(response);
-                    $scope.groupList = response.data.data;
-                });
-        };
+        $scope.selectedCourse = null;
+        $scope.targetGroup = 0;
+        $scope.courseGroupObj = CommonData.getCourseGroupObj();
 
-        $scope.getGroup();
+        //$scope.getGroup = function () {
+        //    $http.get(host + "/courses/" + $scope.dialogGroupCourseUserObj.course.id + "/groups")
+        //        .then(function (response) {
+        //            console.log(response);
+        //            $scope.groupList = response.data.data;
+        //        });
+        //};
+        //
+        //$scope.getGroup();
 
         $scope.editGroupCourseUser = function (user) {
             var userData = {

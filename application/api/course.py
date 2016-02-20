@@ -60,7 +60,6 @@ def get_course_by_id(course_id):
 
 # read
 @api.route('/courses', methods=['GET'])
-@required_token
 def get_courses():
     q = db.session.query(Course, Group).outerjoin(Group, Group.course_id == Course.id).order_by(Course.id)
 

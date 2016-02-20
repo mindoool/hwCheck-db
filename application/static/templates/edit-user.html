@@ -1,22 +1,36 @@
-<md-dialog flex="50">
+<md-dialog flex="70">
     <md-content class="autoScroll">
         <md-list-item layout="row">
-            <span flex="25">이름</span>
-            <span flex="25">반명</span>
-            <span flex="25">과정명</span>
-            <span flex="25">편집</span>
+            <span flex="20">이름</span>
+            <span flex="20">반명</span>
+            <span flex="20">과정명</span>
+            <span flex="40">편집</span>
         </md-list-item>
         <md-divider></md-divider>
             <span ng-repeat="user in dialogGroupCourseUserObj.users">
                 <md-list-item layout="row">
-                    <span flex="25">{{user.name}}</span>
-                    <span flex="25">{{dialogGroupCourseUserObj.name}}</span>
-                    <span flex="25">{{dialogGroupCourseUserObj.course.name}}</span>
-                    <md-select ng-model="user.selectedGroupId" class="filterCourse" placeholder="반선택">
-                        <md-option ng-repeat="group in groupList" ng-value="group.id">
-                            {{group.name}}
-                        </md-option>
-                    </md-select>
+                    <span flex="20" class="left">{{user.name}}</span>
+                    <span flex="20">{{dialogGroupCourseUserObj.name}}</span>
+                    <span flex="20">{{dialogGroupCourseUserObj.course.name}}</span>
+                    <div flex="20">
+                        <md-select ng-model="selectedCourse" class="filterCourse" placeholder="과정선택">
+                            <md-option ng-repeat="(key, value) in courseGroupObj" ng-value="value">
+                                {{value.name}}
+                            </md-option>
+                        </md-select>
+                    </div>
+                    <div flex="20">
+                        <md-select ng-model="user.selectedGroupId" class="filterCourse" placeholder="반선택">
+                            <md-option ng-repeat="group in selectedCourse.groups" value="{{group.id}}">
+                                {{group.id}} {{group.name}}
+                            </md-option>
+                        </md-select>
+                    </div>
+                    <!--<md-select ng-model="user.selectedGroupId" class="filterCourse" placeholder="반선택">-->
+                        <!--<md-option ng-repeat="group in groupList" ng-value="group.id">-->
+                            <!--{{group.name}}-->
+                        <!--</md-option>-->
+                    <!--</md-select>-->
                     <md-button type="submit" class="md-raised md-block" ng-click="editGroupCourseUser(user)">Submit</md-button>
                 </md-list-item>
             </span>

@@ -16,7 +16,7 @@
         <div class="center"><img src="img/logo.png" class="logo"/></div>
         <md-list>
             <md-list-item>
-                <p class="username"> {{$root.user.name}}</p>
+                <md-button class="text-center username" ng-href="#/user"> {{$root.user.name}}</md-button>
             </md-list-item>
             <md-list-item ng-show="!$root.token">
                 <md-button class="center" ng-href="#/login">Login</md-button>
@@ -27,7 +27,7 @@
             <md-list-item ng-show="$root.user.isAdmin == 1">
                 <md-button class="center" ng-href="#/admin"> 어드민 </md-button>
             </md-list-item>
-            <md-list-item>
+            <md-list-item ng-show="$root.token">
                 <md-button class="center" ng-href="#/"> 메인화면 </md-button>
             </md-list-item>
         </md-list>
@@ -54,9 +54,10 @@
 <script src="js/controllers/CourseController.js"></script>
 <script src="js/controllers/GroupController.js"></script>
 <script src="js/controllers/UserController.js"></script>
+<script src="js/controllers/UserEditController.js"></script>
 <script src="js/directives/hw.js"></script>
 <script src="js/directives/fileReader.js"></script>
 <script src="js/services/Storage.js"></script>
-<script src="js/services/Obj.js"></script>
+<script src="js/services/CommonData.js"></script>
 </body>
 </html>

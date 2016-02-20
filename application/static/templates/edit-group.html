@@ -2,7 +2,7 @@
     <form name="editGroupForm" ng-submit="editGroup()">
         <md-content class="autoScroll">
             <md-input-container class="md-block">
-                <input ng-model="currentGroup.name" type="text" placeholder="currentGroup.name" ng-required="true">
+                <input ng-model="currentGroup.name" type="text" placeholder="반명" ng-required="true">
                 <div ng-messages="editGroupFrom.name.$error">
                     <div ng-message="required">This is required.</div>
                 </div>

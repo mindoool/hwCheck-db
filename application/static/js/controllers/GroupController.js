@@ -1,18 +1,18 @@
-app.controller('GroupController', ['$scope', 'storage', '$mdMedia', '$mdDialog', '$http', 'Obj', function ($scope, storage, $mdMedia, $mdDialog, $http, Obj) {
+app.controller('GroupController', ['$scope', 'storage', '$mdMedia', '$mdDialog', '$http', 'CommonData', function ($scope, storage, $mdMedia, $mdDialog, $http, CommonData) {
     //과정 생성하는 함수
 
-    $scope.groupList = [];
+    $scope.groupList = CommonData.getGroupList();
 
-    $scope.getGroup = function () {
-        $http.get(host + "/courses/0/groups")
-            .then(function (response) {
-                console.log(response);
-                $scope.groupList = response.data.data;
-                $scope.commonCourseList = Obj.getCourseList();
-            });
-    };
-
-    $scope.getGroup();
+    //$scope.getGroup = function () {
+    //    $http.get(host + "/courses/0/groups")
+    //        .then(function (response) {
+    //            console.log(response);
+    //            $scope.groupList = response.data.data;
+    //            $scope.commonCourseList = CommonData.getCourseList();
+    //        });
+    //};
+    //
+    //$scope.getGroup();
 
     $scope.createGroupDialog = function (ev) {
         $mdDialog.show({

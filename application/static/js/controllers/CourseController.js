@@ -1,19 +1,16 @@
-app.controller('CourseController', ['$scope', 'storage', '$mdMedia', '$mdDialog', '$http', '$filter', 'Obj', function ($scope, storage, $mdMedia, $mdDialog, $http, $filter, Obj) {
+app.controller('CourseController', ['$scope', 'storage', '$mdMedia', '$mdDialog', '$http', '$filter','CommonData', function ($scope, storage, $mdMedia, $mdDialog, $http, $filter, CommonData) {
     //과정 생성하는 함수
-    $scope.Obj = Obj;
+    $scope.courseList = CommonData.getCourseList();
 
-    $scope.courseList = [];
-
-    $scope.getCourse = function() {
-        $http.get(host + "/courses")
-            .then(function (response) {
-                console.log(response);
-                $scope.courseList = response.data.data;
-                Obj.rootCourseList = $scope.courseList;
-            });
-    };
-
-    $scope.getCourse();
+    //$scope.getCourse = function() {
+    //    $http.get(host + "/courses")
+    //        .then(function (response) {
+    //            console.log(response);
+    //            $scope.courseList = response.data.data;
+    //        });
+    //};
+    //
+    //$scope.getCourse();
 
     $scope.createCourseDialog = function (course) {
         $mdDialog.show({

@@ -1,5 +1,5 @@
-app.controller('LoginController', ['$scope', '$mdDialog', '$mdMedia', '$http', 'storage', '$state', '$rootScope', function ($scope, $mdDialog, $mdMedia, $http, storage, $state, $rootScope) {
-    $scope.data = [];
+app.controller('LoginController', ['$scope', '$mdDialog', '$mdMedia', '$http', 'storage', '$state', '$rootScope', 'CommonData', function ($scope, $mdDialog, $mdMedia, $http, storage, $state, $rootScope, CommonData) {
+    $scope.commonData = CommonData;
 
     $scope.user = {
         email: "",
@@ -9,7 +9,7 @@ app.controller('LoginController', ['$scope', '$mdDialog', '$mdMedia', '$http', '
     $scope.login = function () {
         console.log('hi');
         $http.post(host+'/users/login', $scope.user)
-            .then(function (response) {
+            .then(function successCallback(response) {
                 storage.set('token', response.data.token);
                 storage.set('userData', response.data.data);
                 console.log(response.data);
@@ -21,37 +21,10 @@ app.controller('LoginController', ['$scope', '$mdDialog', '$mdMedia', '$http', '
                 } else {
                     $state.go('hwlist');
                 }
-
-
+            }, function errorCallback(response) {
+                alert('이메일 주소나 비밀번호가 잘못되었습니다.');
             });
     };
-
-
-    $scope.groupList = [];
-
-    $scope.selectedCourse = null;
-    $scope.targetGroup = 0;
-    $scope.courseObj = {};
-
-
-    //group 불러오기
-    $http.get(host + "/courses/0/groups", {cache: true})
-        .then(function (response) {
-            console.log(response);
-            $scope.groupList = response.data.data;
-            for (var i = 0; i < $scope.groupList.length; i++) {
-                var course = $scope.groupList[i].course;
-
-                if (typeof $scope.courseObj[course.id]=="undefined") {
-                    course.groups = [$scope.groupList[i]];
-                    $scope.courseObj[course.id] = course;
-                } else {
-                    $scope.courseObj[course.id].groups.push($scope.groupList[i]);
-                }
-            }
-            console.log($scope.courseObj);
-        });
-
 
     //과제를 출제하기 위해 호출하는 함수
     $scope.signupDialog = function (event) {
@@ -84,6 +57,11 @@ app.controller('LoginController', ['$scope', '$mdDialog', '$mdMedia', '$http', '
             passwordCheck:"",
             name:""
         };
+
+        //service에서 가져오기
+        $scope.courseGroupObj = $scope.commonData.getCourseGroupObj();
+        $scope.selectedCourse = null;
+        $scope.targetGroup = 0;
 
         //$scope.getGroupId = function(id) {
         //    console.log(id);

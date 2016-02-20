@@ -1,41 +1,15 @@
-app.controller('AdminController', ['$scope', 'storage', '$mdMedia', '$mdDialog', '$http', '$filter', function ($scope, storage, $mdMedia, $mdDialog, $http, $filter) {
+app.controller('AdminController', ['$scope', 'storage', '$mdMedia', '$mdDialog', '$http', '$filter', 'CommonData', function ($scope, storage, $mdMedia, $mdDialog, $http, $filter, CommonData) {
 
     //문제목록 불러올 때 필터링 기준 - course 기준
-
-    $scope.groupList = [];
-
     $scope.selectedCourse = null;
     $scope.targetGroup = 0;
-    $scope.courseObj = {};
-
-
-    //group 불러오기
-    $http.get(host + "/courses/0/groups", {cache: true})
-        .then(function (response) {
-            console.log(response);
-            $scope.groupList = response.data.data;
-            for (var i = 0; i < $scope.groupList.length; i++) {
-                var course = $scope.groupList[i].course;
-
-                if (typeof $scope.courseObj[course.id]=="undefined") {
-                    course.groups = [$scope.groupList[i]];
-                    $scope.courseObj[course.id] = course;
-                } else {
-                    $scope.courseObj[course.id].groups.push($scope.groupList[i]);
-                }
-            }
-            console.log($scope.courseObj);
-        });
+    $scope.courseGroupObj = CommonData.getCourseGroupObj();
 
     //문제목록 불러오는 거
     $scope.datepicker = {
         "date1": new Date(Date.now()-7*24*60*60*1000),
         "date2": new Date(Date.now()+7*24*60*60*1000)
     };
-
-    $scope.dateObj = {};
-    $scope.groupObj = {};
-    $scope.problemObj = {};
 
     $scope.getProblemList = function () {
         var params = {

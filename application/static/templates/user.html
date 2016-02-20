@@ -1,0 +1,49 @@
+<md-toolbar class="toolbar-name">
+    <div class="md-whiteframe-glow-z1 site-content-toolbar">
+        <h3>
+            <span>회원정보 수정</span>
+        </h3>
+    </div>
+</md-toolbar>
+<br>
+<form name="signUpForm" ng-submit="editUser()">
+    <md-content class="autoScroll top">
+        <md-input-container class="md-block">
+            <!-- Use floating placeholder instead of label -->
+            <input ng-model="user.email" type="email" placeholder="이메일 (필수)" ng-required="true" value="{{user.email}}"
+                   disabled>
+        </md-input-container>
+        <md-input-container class="md-block">
+            <!-- Use floating placeholder instead of label -->
+            <input ng-model="user.password" type="password" name="password" placeholder="비밀번호 (필수)"
+                   ng-required="true">
+
+            <div ng-messages="signUpForm.password.$error">
+                <div ng-message="required">필수 입력 사항입니다.</div>
+            </div>
+        </md-input-container>
+        <md-input-container class="md-block">
+            <!-- Use floating placeholder instead of label -->
+            <input ng-model="user.passwordCheck" type="password" name="passwordCheck"
+                   placeholder="비밀번호 재입력 (필수)" ng-required="true">
+
+            <div ng-messages="signUpForm.passwordCheck.$error">
+                <div ng-message="required">필수 입력 사항입니다.</div>
+                <div ng-show="user.passwordCheck.length>0 && user.password !== user.passwordCheck">Password와 일치하지 않습니다.
+                </div>
+            </div>
+        </md-input-container>
+        <md-input-container class="md-block">
+            <!-- Use floating placeholder instead of label -->
+            <input ng-model="user.name" type="text" name="name"
+                   placeholder="이름 (필수)" ng-required="true">
+
+            <div ng-messages="signUpForm.name.$error">
+                <div ng-message="required">필수 입력 사항입니다.</div>
+            </div>
+        </md-input-container>
+        <br>
+        <md-button type="submit" class="md-raised md-block">제출</md-button>
+        <md-button ng-click="cancel()" class="md-raised md-block">닫기</md-button>
+    </md-content>
+</form>

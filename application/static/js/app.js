@@ -18,6 +18,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
             controller: "HwListController",
             userOnly: true
         })
+        .state('user', {
+            url:'/user',
+            templateUrl: 'templates/user.html',
+            controller:"UserEditController",
+            userOnly: true
+        })
         .state('admin', {
             url:'/admin',
             templateUrl: 'templates/admin.html',
@@ -39,7 +45,7 @@ app.run(function($http, storage, $rootScope, $state) {
             }
         }
         if( toState.userOnly ){
-            if ($rootScope.token == false ) {
+            if (!$rootScope.token) {
                 $state.go('login');
                 event.preventDefault();
             }

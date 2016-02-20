@@ -1,7 +1,7 @@
 <md-dialog flex="70">
     <div lyout="col">
         <div flex>
-            <div layout="row">
+            <div layout="row" class="hw-dialog-title">
                 <div flex="5"></div>
                 <div flex="45"> 과제명 : {{currentHomework.name}}</div>
                 <div flex="25"> 제출기한 : {{currentHomework.date}}</div>
@@ -12,20 +12,21 @@
         <div layout="row">
             <div flex="5"></div>
             <div flex="25">
-                <div> 문제명</div>
-                <div ng-repeat="problem in userAnswerList[0].problems">{{$index +1}}. {{problem.name}}</div>
+                <div class="answer-list-title text-center"> 문제명</div>
+                <div ng-repeat="problem in userAnswerList[0].problems" class="answer-list">{{$index +1}}. {{problem.name}}</div>
             </div>
-            <div ng-repeat="userAnswer in userAnswerList" flex="25">
-                {{userAnswer.name}}
-                <div ng-repeat="problem in userAnswer.problems">
-                    {{problem.answer.content}}
+            <div ng-repeat="userAnswer in userAnswerList" flex="15" class="answer-list">
+                <div class="answer-list-title text-center">{{userAnswer.name}}</div>
+                <div ng-repeat="problem in userAnswer.problems" class="answer-list text-center">
+                    <span>{{problem.answer.content}}</span>
                 </div>
             </div>
             <div flex="5"></div>
         </div>
         <div flex>
             <div layout="row">
-                <div flex="50">
+                <div flex="80"></div>
+                <div flex="20">
                     <md-button class="md-raised md-block" ng-click="cancel()"> Close</md-button>
                 </div>
             </div>

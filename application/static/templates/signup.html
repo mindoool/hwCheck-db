@@ -45,7 +45,7 @@
             <!--</md-input-container>-->
             <md-input-container>
                 <md-select ng-model="selectedCourse" name="course" placeholder="과정 선택 (필수)" ng-required="true">
-                    <md-option ng-repeat="(key, value) in dummyObj" ng-value="value">
+                    <md-option ng-repeat="(key, value) in courseGroupObj" ng-value="value">
                         {{value.name}}
                     </md-option>
                 </md-select>

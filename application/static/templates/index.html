@@ -1,4 +1,42 @@
 <div layout="column" class="dohw">
+    <md-toolbar class="toolbar-name">
+        <div class="md-whiteframe-glow-z1 site-content-toolbar">
+            <h3>
+                <span>열공합시다</span>
+            </h3>
+        </div>
+    </md-toolbar>
+    <div flex="95" class="top">
+        <form ng-submit="getHwList()">
+            <div layout="row">
+                <!--<div flex="20">-->
+                    <!--<md-select ng-model="selectedCourse" class="filterCourse" placeholder="과정선택">-->
+                        <!--<md-option ng-repeat="(key, value) in courseGroupObj" ng-value="value">-->
+                            <!--{{value.name}}-->
+                        <!--</md-option>-->
+                    <!--</md-select>-->
+                <!--</div>-->
+                <!--<div flex="20">-->
+                    <!--<md-select ng-model="targetGroup" class="filterCourse" placeholder="반선택">-->
+                        <!--<md-option ng-repeat="group in selectedCourse.groups" value="{{group.id}}">-->
+                            <!--{{group.name}}-->
+                        <!--</md-option>-->
+                    <!--</md-select>-->
+                <!--</div>-->
+                <div flex="20" class="filter">
+                    <span>Start Date</span>
+                    <md-datepicker ng-model="datepicker.date1"></md-datepicker>
+                </div>
+                <div flex="20" class="filter">
+                    <span>End Date</span>
+                    <md-datepicker ng-model="datepicker.date2"></md-datepicker>
+                </div>
+                <div flex="20" class="filter">
+                    <md-button class="md-raised md-block" ng-click="getHwList()"> Submit</md-button>
+                </div>
+            </div>
+        </form>
+    </div>
     <div flex>
         <md-toolbar class="toolbar-name top">
             <div class="md-toolbar-tools toolbar-text">

@@ -22,6 +22,10 @@
 }
 
 .username {
+    color : black;
+}
+
+.text-center {
     margin: auto;
     width: 80%;
     text-align: center;
@@ -73,10 +77,6 @@
     padding-left: 10px;
 }
 
-.text-left {
-    margin-left: 10px;
-}
-
 .md-button {
     min-width: 40px;
 }
@@ -105,4 +105,13 @@ body {
     border-bottom: 1px solid darkgrey;
     padding-bottom: 10px;
     color: #333333;
+}
+
+.answer-list {
+    margin: 5px;
+}
+
+.answer-list-title {
+    padding : 5px;
+    border-bottom: 1px solid darkgrey;
 }
