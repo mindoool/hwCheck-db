@@ -147,7 +147,8 @@ def get_users():
 
 # read user-relation-homework-problem-answer
 @api.route('/users-answers', methods=['GET'])
-# @required_token
+@required_admin
+@required_token
 def get_users_answers():
     homework_id = request.args.get('homeworkId')
     if homework_id is not None:

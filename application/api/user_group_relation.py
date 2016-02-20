@@ -12,7 +12,7 @@ from application.lib.rest.auth_helper import required_admin
 
 # read
 @api.route('/user-group-relations/<int:user_group_relation_id>', methods=['GET'])
-# @required_token
+@required_token
 def get_user_group_relation_by_id(user_group_relation_id):
     try:
         user_group_relation = UserGroupRelation.get_query(
@@ -29,7 +29,7 @@ def get_user_group_relation_by_id(user_group_relation_id):
 
 # read
 @api.route('/user-group-relations', methods=['GET'])
-# @required_token
+@required_token
 def get_user_group_relations():
     request_params = request.get_json()
     if request.args.get('userId') is not None:
@@ -78,7 +78,7 @@ def get_user_group_relations():
 
 # update
 @api.route('/user-group-relations/<int:user_group_relation_id>', methods=['PUT'])
-# @required_admin
+@required_admin
 def update_user_group_relation(user_group_relation_id):
     request_params = request.get_json()
     user_id = request_params.get('userId')
@@ -106,7 +106,7 @@ def update_user_group_relation(user_group_relation_id):
 
 # delete
 @api.route('/user-group-relations/<int:user_group_relation_id>', methods=['DELETE'])
-# @required_admin
+@required_admin
 def delete_user_group_relation(user_group_relation_id):
     try:
         user_group_relation = db.session.query(UserGroupRelation).get(user_group_relation_id)

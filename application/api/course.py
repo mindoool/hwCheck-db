@@ -5,11 +5,12 @@ from application import db
 from application.models.course import Course
 from application.models.group import Group
 from application.models.mixin import SerializableModelMixin
-from application.lib.rest.auth_helper import required_token
+from application.lib.rest.auth_helper import required_token, required_admin
 
 
 # create
 @api.route('/courses', methods=['POST'])
+@required_admin
 def create_courses():
     name = request.get_json().get('name')
 
@@ -43,6 +44,7 @@ def create_courses():
 
 # read
 @api.route('/courses/<int:course_id>', methods=['GET'])
+@required_token
 def get_course_by_id(course_id):
     try:
         course = db.session.query(Course).get(course_id)
@@ -58,6 +60,7 @@ def get_course_by_id(course_id):
 
 # read
 @api.route('/courses', methods=['GET'])
+@required_token
 def get_courses():
     q = db.session.query(Course, Group).outerjoin(Group, Group.course_id == Course.id).order_by(Course.id)
 
@@ -87,6 +90,7 @@ def get_courses():
 
 # update
 @api.route('/courses/<int:course_id>', methods=['PUT'])
+@required_admin
 def update_course(course_id):
     # try:
     course = db.session.query(Course).get(course_id)
@@ -110,6 +114,7 @@ def update_course(course_id):
 
 # delete
 @api.route('/courses/<int:course_id>', methods=['DELETE'])
+@required_admin
 def delete_course(course_id):
     try:
         course = db.session.query(Course).get(course_id)

@@ -69,7 +69,7 @@ def create_answers(request_user_id=None):
 
 # read
 @api.route('/answers/<int:answer_id>', methods=['GET'])
-# @required_token
+@required_token
 def get_answer_by_id(answer_id):
     try:
         answer = Answer.get_query(
@@ -86,7 +86,7 @@ def get_answer_by_id(answer_id):
 
 # read
 @api.route('/answers', methods=['GET'])
-# @required_token
+@required_token
 def get_answers():
     if request.args.get('userId') is not None:
         user_id = int(request.args.get('userId'))
@@ -134,7 +134,7 @@ def get_answers():
 
 # update
 @api.route('/answers', methods=['PUT'])
-# @required_admin
+@required_admin
 def update_answer():
     request_params = request.get_json()
     problem_answer_list = request_params.get('problemAnswers')
@@ -173,7 +173,7 @@ def update_answer():
 
 # delete
 @api.route('/answers/<int:answer_id>', methods=['DELETE'])
-# @required_admin
+@required_admin
 def delete_answer(answer_id):
     try:
         answer = db.session.query(Answer).get(answer_id)

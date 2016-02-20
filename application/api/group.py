@@ -11,7 +11,7 @@ from application.lib.rest.auth_helper import required_admin
 
 # create name, course_id
 @api.route('/courses/<int:course_id>/groups', methods=['POST'])
-# @required_admin
+@required_admin
 def create_groups(course_id):
     name = request.get_json().get('name')
 
@@ -45,7 +45,7 @@ def create_groups(course_id):
 
 # read
 @api.route('/courses/<int:course_id>/groups/<int:group_id>', methods=['GET'])
-# @required_token
+@required_token
 def get_group_by_id(course_id, group_id):
     try:
         group = Group.get_query(filter_condition=(Group.id == group_id))
@@ -61,7 +61,7 @@ def get_group_by_id(course_id, group_id):
 
 # read
 @api.route('/courses/<int:course_id>/groups', methods=['GET'])
-# @required_token
+@required_token
 def get_groups(course_id=0):
     if course_id != 0:
         filter_condition = (Group.course_id == course_id)
@@ -77,7 +77,7 @@ def get_groups(course_id=0):
 
 # update
 @api.route('/courses/<int:course_id>/groups/<int:group_id>', methods=['PUT'])
-# @required_admin
+@required_admin
 def update_group(course_id, group_id):
     request_params = request.get_json()
     name = request_params.get('name')
@@ -105,7 +105,7 @@ def update_group(course_id, group_id):
 
 # delete
 @api.route('/courses/<int:course_id>/groups/<int:group_id>', methods=['DELETE'])
-# @required_admin
+@required_admin
 def delete_group(course_id, group_id):
     try:
         group = db.session.query(Group).get(group_id)

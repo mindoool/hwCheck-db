@@ -12,7 +12,7 @@ from application.lib.rest.auth_helper import required_admin
 
 # read
 @api.route('/user-homework-relations/<int:user_homework_relation_id>', methods=['GET'])
-# @required_token
+@required_token
 def get_user_homework_relation_by_id(user_homework_relation_id):
     try:
         user_homework_relation = UserHomeworkRelation.get_query(
@@ -29,7 +29,7 @@ def get_user_homework_relation_by_id(user_homework_relation_id):
 
 # read
 @api.route('/user-homework-relations', methods=['GET'])
-# @required_token
+@required_token
 def get_user_homework_relations():
     if request.args.get('userId') is not None:
         user_id = int(request.args.get('userId'))
@@ -76,7 +76,7 @@ def get_user_homework_relations():
 
 # update
 @api.route('/user-homework-relations/<int:user_homework_relation_id>', methods=['PUT'])
-# @required_admin
+@required_admin
 def update_user_homework_relation(user_homework_relation_id):
     request_params = request.get_json()
     user_id = request_params.get('userId')
@@ -104,7 +104,7 @@ def update_user_homework_relation(user_homework_relation_id):
 
 # delete
 @api.route('/user-homework-relations/<int:user_homework_relation_id>', methods=['DELETE'])
-# @required_admin
+@required_admin
 def delete_user_homework_relation(user_homework_relation_id):
     try:
         user_homework_relation = db.session.query(UserHomeworkRelation).get(user_homework_relation_id)

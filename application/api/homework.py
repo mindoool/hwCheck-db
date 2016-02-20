@@ -15,7 +15,7 @@ from application.lib.rest.auth_helper import required_admin
 
 # read
 @api.route('/groups/<int:group_id>/homeworks/<int:homework_id>', methods=['GET'])
-# @required_token
+@required_token
 def get_homework_by_id(group_id, homework_id):
     try:
         homework = Homework.get_query(filter_condition=(Homework.id == homework_id))
@@ -31,7 +31,7 @@ def get_homework_by_id(group_id, homework_id):
 
 # read
 @api.route('/groups/<int:group_id>/homeworks', methods=['GET'])
-# @required_token
+@required_token
 def get_homeworks(group_id=0):
     if group_id != 0:
         filter_condition = (Homework.group_id == group_id)
@@ -83,7 +83,7 @@ def get_homeworks(group_id=0):
 
 # update
 @api.route('/groups/<int:group_id>/homeworks/<int:homework_id>', methods=['PUT'])
-# @required_admin
+@required_admin
 def update_homework(group_id, homework_id):
     request_params = request.get_json()
     name = request_params.get('name')
@@ -111,7 +111,7 @@ def update_homework(group_id, homework_id):
 
 # delete
 @api.route('/groups/<int:group_id>/homeworks/<int:homework_id>', methods=['DELETE'])
-# @required_admin
+@required_admin
 def delete_homework(group_id, homework_id):
     try:
         homework = db.session.query(Homework).get(homework_id)

@@ -16,6 +16,7 @@ from application.lib.rest.auth_helper import required_admin
 
 # create
 @api.route('/problems', methods=['POST'])
+@required_admin
 def create_problems():
     request_params = request.get_json()
     content = request_params.get('content')
@@ -83,6 +84,7 @@ def create_problems():
 
 # read
 @api.route('/homeworks/<int:homework_id>/problems/<int:problem_id>', methods=['GET'])
+@required_token
 def get_problem_by_id(homework_id, problem_id):
     # try:
     q = Problem.get_query(filter_condition=(Problem.id == problem_id))
@@ -119,6 +121,7 @@ def get_problems(homework_id=0, request_user_id=None):
 
 # update
 @api.route('/homeworks/<int:homework_id>/problems/<int:problem_id>', methods=['PUT'])
+@required_admin
 def update_problems(homework_id, problem_id):
     request_params = request.get_json()
     name = request_params.get('name')
@@ -146,6 +149,7 @@ def update_problems(homework_id, problem_id):
 
 # delete
 @api.route('/homeworks/<int:homework_id>/problems/<int:problem_id>', methods=['DELETE'])
+@required_admin
 def delete_problems(homework_id, problem_id):
     try:
         problem = db.session.query(Problem).filter(Problem.id == problem_id, Problem.homework_id == homework_id)
