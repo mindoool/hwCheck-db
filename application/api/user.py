@@ -187,7 +187,6 @@ def get_users_answers():
 
 # update
 @api.route('/users/<int:user_id>', methods=['PUT'])
-@required_admin
 @required_token
 def update_user(user_id, request_user_id=None):  # request_user_id 형식은 어디서 가져오는지?
     try:
@@ -206,16 +205,21 @@ def update_user(user_id, request_user_id=None):  # request_user_id 형식은 어
 
     request_params = request.get_json()
     password = request_params.get('password')
-
+    username = request_params.get('name')
 
     if password is not None:
-        user.password = password
+        user.password = password_encode(password)
+
+    if username is not None:
+        user.username = username
 
     db.session.commit()
-    user_data = user.serialize()
 
+    token = user.get_token()
+    user_data = user.serialize()
     return jsonify(
-        data=user_data
+        data=user_data,
+        token=token
     ), 200
 
 
