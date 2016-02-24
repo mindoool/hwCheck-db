@@ -5,7 +5,13 @@ api_version: 1
 threadsafe: yes
 
 handlers:
-- url: .*
+# index html
+- url: /
+  static_files: static/index.html
+  upload: static/index.html
+  expiration: "1m"
+
+- url: /.*
   script: application.app
 
 libraries:
