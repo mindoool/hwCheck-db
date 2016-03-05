@@ -16,7 +16,7 @@ app.controller('UserController', ['$scope', 'storage', '$mdMedia', '$mdDialog', 
             userId: 0,
             groupId: 0
         };
-        $http.get(host + "/user-group-relations", {params: params}, {cache: true})
+        $http.get(host + "/user-group-relations", {params: params})
             .then(function (response) {
                 $scope.groupCourseUserList = response.data.data;
                 console.log($scope.groupCourseUserList);

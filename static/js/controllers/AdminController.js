@@ -16,7 +16,7 @@ app.controller('AdminController', ['$scope', 'storage', '$mdMedia', '$mdDialog',
             "date1": $filter('date')(new Date($scope.datepicker.date1), 'yyyy-MM-dd'),
             "date2": $filter('date')(new Date($scope.datepicker.date2), 'yyyy-MM-dd'),
         };
-        $http.get(host + "/groups/" + $scope.targetGroup + "/problems", {params: params}, {cache: true})
+        $http.get(host + "/groups/" + $scope.targetGroup + "/problems", {params: params})
             .then(function (response) {
                 $scope.dateList2 = [];
                 $scope.problemGroupList = [];
@@ -73,7 +73,7 @@ app.controller('AdminController', ['$scope', 'storage', '$mdMedia', '$mdDialog',
             "date1": $filter('date')(new Date($scope.datepicker.date1), 'yyyy-MM-dd'),
             "date2": $filter('date')(new Date($scope.datepicker.date2), 'yyyy-MM-dd'),
         };
-        $http.get(host + "/groups/" + $scope.targetGroup + "/homeworks", {params: params}, {cache: true})
+        $http.get(host + "/groups/" + $scope.targetGroup + "/homeworks", {params: params})
             .then(function (response) {
                 $scope.homeworkObj = response.data.data;
             });
