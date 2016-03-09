@@ -134,7 +134,7 @@ def get_answers():
 
 # update
 @api.route('/answers', methods=['PUT'])
-@required_admin
+@required_token
 def update_answer():
     request_params = request.get_json()
     problem_answer_list = request_params.get('problemAnswers')

@@ -10,18 +10,18 @@
         <form ng-submit="getHwList()">
             <div layout="row">
                 <!--<div flex="20">-->
-                    <!--<md-select ng-model="selectedCourse" class="filterCourse" placeholder="과정선택">-->
-                        <!--<md-option ng-repeat="(key, value) in courseGroupObj" ng-value="value">-->
-                            <!--{{value.name}}-->
-                        <!--</md-option>-->
-                    <!--</md-select>-->
+                <!--<md-select ng-model="selectedCourse" class="filterCourse" placeholder="과정선택">-->
+                <!--<md-option ng-repeat="(key, value) in courseGroupObj" ng-value="value">-->
+                <!--{{value.name}}-->
+                <!--</md-option>-->
+                <!--</md-select>-->
                 <!--</div>-->
                 <!--<div flex="20">-->
-                    <!--<md-select ng-model="targetGroup" class="filterCourse" placeholder="반선택">-->
-                        <!--<md-option ng-repeat="group in selectedCourse.groups" value="{{group.id}}">-->
-                            <!--{{group.name}}-->
-                        <!--</md-option>-->
-                    <!--</md-select>-->
+                <!--<md-select ng-model="targetGroup" class="filterCourse" placeholder="반선택">-->
+                <!--<md-option ng-repeat="group in selectedCourse.groups" value="{{group.id}}">-->
+                <!--{{group.name}}-->
+                <!--</md-option>-->
+                <!--</md-select>-->
                 <!--</div>-->
                 <div flex="20" class="filter">
                     <span>Start Date</span>
@@ -46,7 +46,6 @@
             </div>
         </md-toolbar>
     </div>
-
     <div flex>
         <div layout="row" class="hw-list-title">
             <div flex="5"></div>
@@ -71,8 +70,8 @@
             </div>
             <div flex="33"></div>
         </div>
-        <span ng-repeat="hw in hwList | filter:hwList.length!==0">
-            <div layout="row" ng-if="hw.date > today && hw.userHomeworkRelation.isSubmitted ==0">
+        <span ng-repeat="hw in hwList">
+            <div layout="row" ng-if="hw.date >= today && hw.userHomeworkRelation.isSubmitted ==0">
                 <div flex="5"></div>
                 <div flex="25">
                     <span>{{hw.name}}</span>
@@ -125,7 +124,7 @@
             </div>
             <div flex="33"></div>
         </div>
-        <span ng-repeat="hw in hwList | filter:hwList.length!==0">
+        <span ng-repeat="hw in hwList">
             <div layout="row" ng-if="hw.userHomeworkRelation.isSubmitted ==1">
                 <div flex="5"></div>
                 <div flex="25" class="hw-list">
@@ -138,7 +137,7 @@
                     <span>{{hw.date}}</span>
                 </div>
                 <div flex="20">
-                    <md-button ng-click="doHw($event, hw)"> 제출완료 </md-button>
+                    <md-button ng-click="doHw($event, hw)"> 제출완료</md-button>
                 </div>
                 <div flex="5"></div>
             </div>
@@ -179,7 +178,7 @@
             </div>
             <div flex="33"></div>
         </div>
-        <span ng-repeat="hw in hwList | filter:hwList.length!==0">
+        <span ng-repeat="hw in hwList">
             <div layout="row" ng-if="hw.date < today" class="top">
                 <div flex="5"></div>
                 <div flex="25">

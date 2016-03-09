@@ -4,6 +4,7 @@ app.controller('HwListController', ['$scope', 'storage', '$mdMedia', '$mdDialog'
         "date1": new Date(Date.now()-7*24*60*60*1000),
         "date2": new Date(Date.now()+7*24*60*60*1000)
     };
+    $scope.today = $filter('date')(new Date(), 'yyyy-MM-dd');
     $scope.getHwList = function () {
         var params = {
             "date1": $filter('date')(new Date($scope.datepicker.date1), 'yyyy-MM-dd'),
@@ -89,7 +90,7 @@ app.controller('HwListController', ['$scope', 'storage', '$mdMedia', '$mdDialog'
         };
 
         //답안 입력후 수정하기 버튼을 누르면 서버에 데이터 전송하는 함수
-        $scope.submit = function () {
+        $scope.edit = function () {
             for (var i in $scope.problemList) {
                 if (!$scope.problemList[i].answer.content) {
                     alert('입력하지 않은 답안이 존재합니다.');
