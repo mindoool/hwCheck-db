@@ -61,7 +61,7 @@ app.controller('GroupController', ['$scope', 'storage', '$mdMedia', '$mdDialog',
             $http.post(host + '/courses/' + $scope.group.courseId + '/groups', groupData)
                 .then(function (response) {
                     console.log(response);
-                    $scope.getGroup();
+                    $scope.groupList = CommonData.getGroupList();
                     $scope.hide();
                 })
         };
@@ -73,7 +73,7 @@ app.controller('GroupController', ['$scope', 'storage', '$mdMedia', '$mdDialog',
             $http.put(host + "/courses/" + $scope.currentGroup.courseId + '/groups/' + $scope.currentGroup.id, groupData)
                 .then(function (response) {
                     console.log(response);
-                    $scope.getGroup();
+                    $scope.groupList = CommonData.getGroupList();
                     $scope.hide();
                 });
         }
@@ -104,7 +104,7 @@ app.controller('GroupController', ['$scope', 'storage', '$mdMedia', '$mdDialog',
         $http.delete(host + "/courses/" + group.course.id + '/groups/' + group.id)
             .then(function (response) {
                 console.log(response);
-                $scope.getGroup()
+                $scope.groupList = CommonData.getGroupList();
             });
     };
 
