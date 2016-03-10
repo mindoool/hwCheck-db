@@ -65,7 +65,7 @@ app.controller('CourseController', ['$scope', 'storage', '$mdMedia', '$mdDialog'
             $http.put(host+"/courses/"+course.id, courseData)
                 .then(function(response) {
                     console.log(response);
-                    $scope.courseList = CommonData.getCourseList();
+                    $scope.courseList.push(response.data.data);
                     $scope.cancel();
                 });
         }
@@ -96,7 +96,12 @@ app.controller('CourseController', ['$scope', 'storage', '$mdMedia', '$mdDialog'
         $http.delete(host+"/courses/"+id)
             .then(function (response) {
                 console.log(response);
-                $scope.courseList = CommonData.getCourseList();
+                for (var i = 0; i < $scope.courseList.length; i++) {
+                    if ($scope.courseList[i].id === id) {
+                        $scope.courseList.splice(i, 1);
+                        return;
+                    }
+                }
             });
     };
 

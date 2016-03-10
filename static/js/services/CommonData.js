@@ -27,7 +27,7 @@ app.service('CommonData', ['$http', function ($http) {
                 courseList.push(course);
                 var groups = responseList[i].groups;
                 for (var j = 0; j < groups.length; j++) {
-                    groups[j]['course']=course
+                    groups[j]['course']=course;
                     groupList.push(groups[j]);
 
                     if (typeof courseGroupObj[course.id] == "undefined") {
@@ -49,7 +49,7 @@ app.service('CommonData', ['$http', function ($http) {
     this.getGroupList = function () {
         console.log(groupList);
         return groupList
-    }
+    };
 
     this.getCourseList = function () {
         return courseList

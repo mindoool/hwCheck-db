@@ -110,15 +110,15 @@ def delete_group(course_id, group_id):
     try:
         group = db.session.query(Group).get(group_id)
 
-        try:
-            db.session.delete(group)
-            return jsonify(
-                userMessage="삭제가 완료되었습니다."
-            ), 200
-        except:
-            return jsonify(
-                userMessage="server error, try again"
-            ), 403
+        # try:
+        db.session.delete(group)
+        return jsonify(
+            userMessage="삭제가 완료되었습니다."
+        ), 200
+        # except:
+        #     return jsonify(
+        #         userMessage="server error, try again"
+        #     ), 403
 
     except:
         return jsonify(
