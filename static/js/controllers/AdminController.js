@@ -76,6 +76,7 @@ app.controller('AdminController', ['$scope', 'storage', '$mdMedia', '$mdDialog',
         $http.get(host + "/groups/" + $scope.targetGroup + "/homeworks", {params: params})
             .then(function (response) {
                 $scope.homeworkObj = response.data.data;
+                console.log($scope.homeworkObj);
             });
     };
     $scope.getHwList();
@@ -145,6 +146,21 @@ app.controller('AdminController', ['$scope', 'storage', '$mdMedia', '$mdDialog',
                 homework: homework
             }
         })
+    };
+
+    //과제 삭제
+    $scope.deleteHw = function (key, homework) {
+        console.log('delete');
+        $http.delete(host + "/groups/" + homework.group.id + '/homeworks/' + homework.id)
+            .then(function (response) {
+                console.log(response);
+                for (var i = 0; i < $scope.homeworkObj[key].length; i++) {
+                    if ($scope.homeworkObj[key][i].id === homework.id) {
+                        $scope.homeworkObj[key].splice(i, 1);
+                        return;
+                    }
+                }
+            });
     };
 
     function HwResultController($scope, $mdDialog, homework) {

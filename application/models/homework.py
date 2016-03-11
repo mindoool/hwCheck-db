@@ -12,6 +12,8 @@ class Homework(db.Model, TimeStampMixin, SerializableModelMixin):
     date = db.Column(db.Date, default=db.func.current_timestamp())
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
     group = db.relationship('Group', foreign_keys=[group_id])
+    problems = db.relationship('Problem', cascade="all, delete-orphan")
+    homeworks = db.relationship('UserHomeworkRelation', cascade="all, delete-orphan")
 
     @classmethod
     def get_query(cls, filter_condition=None):

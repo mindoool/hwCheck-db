@@ -54,16 +54,20 @@
                 <div flex="20">과정명</div>
                 <div flex="20">그룹명</div>
                 <div flex="20">과제명</div>
-                <div flex="20">제출자</div>
-                <div flex="20">결과보기</div>
+                <div flex="15">제출자</div>
+                <div flex="15">결과보기</div>
+                <div flex="10">삭제</div>
             </div>
             <div ng-repeat="homework in value" layout="row" class="top">
                 <div flex="20" class="hw-list">{{homework.course.name}}</div>
                 <div flex="20" class="hw-list">{{homework.group.name}}</div>
                 <div flex="20" class="hw-list">{{homework.name}}</div>
-                <div flex="20" class="hw-list">{{homework.users.isSubmitted}} / {{homework.users.count}}</div>
-                <div flex="20">
-                    <md-button ng-click="getResult($event, homework)"> 결과</md-button>
+                <div flex="15" class="hw-list">{{homework.users.isSubmitted}} / {{homework.users.count}}</div>
+                <div flex="15">
+                    <md-button ng-click="getResult($event, homework)">결과</md-button>
+                </div>
+                <div flex="10">
+                    <md-button ng-click="deleteHw(key, homework)">삭제</md-button>
                 </div>
             </div>
         </div>
