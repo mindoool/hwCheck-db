@@ -115,3 +115,7 @@ body {
     padding : 5px;
     border-bottom: 1px solid darkgrey;
 }
+
+md-dialog>form {
+    display: block;
+}

@@ -3,6 +3,25 @@ app.controller('UserEditController', ['$scope', '$mdDialog', '$mdMedia', '$http'
 
     $scope.user = $rootScope.user;
 
+    $scope.groupCourseUserList = [];
+    $scope.getUserGroupList = function () {
+        var params = {
+            userId: $scope.user.id,
+            groupId: 0
+        };
+        $http.get(host + "/user-group-relations", {params: params})
+            .then(function (response) {
+                $scope.groupCourseUserList = response.data.data;
+                console.log($scope.groupCourseUserList);
+            });
+    };
+
+    $scope.getUserGroupList();
+
+    $scope.courseGroupObj = $scope.commonData.getCourseGroupObj();
+    $scope.selectedCourse = null;
+    $scope.targetGroup = 0;
+
     $scope.editUser = function () {
         console.log('hi');
         $http.put(host+'/users/'+$scope.user.id, $scope.user)

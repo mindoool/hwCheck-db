@@ -1,8 +1,8 @@
 app.controller('HwListController', ['$scope', 'storage', '$mdMedia', '$mdDialog', '$http', '$rootScope', '$filter', function ($scope, storage, $mdMedia, $mdDialog, $http, $rootScope, $filter) {
     //서버에서 과제목록을 받아오는 함수
     $scope.datepicker = {
-        "date1": new Date(Date.now()-7*24*60*60*1000),
-        "date2": new Date(Date.now()+7*24*60*60*1000)
+        "date1": new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        "date2": new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     };
     $scope.today = $filter('date')(new Date(), 'yyyy-MM-dd');
     $scope.getHwList = function () {
@@ -59,10 +59,9 @@ app.controller('HwListController', ['$scope', 'storage', '$mdMedia', '$mdDialog'
                 $scope.problemList = response.data.data;
                 for (var i = 0; i < $scope.problemList.length; i++) {
                     if (!$scope.problemList[i]['answer']) {
-                        $scope.problemList[i]['answer'] = {'content': ""};
+                        $scope.problemList[i]['answer'] = {'content': "맞음"};
                     }
                 }
-                ;
                 console.log($scope.problemList);
             });
 
