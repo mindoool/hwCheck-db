@@ -22,9 +22,34 @@ app.controller('UserEditController', ['$scope', '$mdDialog', '$mdMedia', '$http'
     $scope.selectedCourse = null;
     $scope.targetGroup = 0;
 
+    $scope.deleteUserGroupRelation = function (obj) {
+        $http.delete(host + '/user-group-relations/' + obj.users[0].userGroup.id)
+            .then(function (response) {
+                console.log(response);
+                for (var i = 0; i < $scope.groupCourseUserList.length; i++) {
+                    if ($scope.groupCourseUserList[i].id === obj.id) {
+                        $scope.groupCourseUserList.splice(i, 1);
+                        return;
+                    }
+                }
+            });
+    };
+
+    $scope.createUserGroupRelation = function (targetGroup) {
+        var userGroupRelationData = {
+            userId: $scope.user.id,
+            groupId: targetGroup
+        };
+        $http.post(host + '/user-group-relations', userGroupRelationData)
+            .then(function (response) {
+                console.log(response);
+                $scope.getUserGroupList()
+            })
+    };
+
     $scope.editUser = function () {
         console.log('hi');
-        $http.put(host+'/users/'+$scope.user.id, $scope.user)
+        $http.put(host + '/users/' + $scope.user.id, $scope.user)
             .then(function successCallback(response) {
                 storage.set('token', response.data.token);
                 $scope.$root.token = response.data.token;

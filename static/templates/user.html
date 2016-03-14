@@ -42,28 +42,35 @@
                 <div ng-message="required">필수 입력 사항입니다.</div>
             </div>
         </md-input-container>
-        <div ng-repeat="groupCourseUser in groupCourseUserList">
-            <md-input-container>
-                <md-select ng-model="selectedCourse" name="course" placeholder="과정 선택 (필수)" ng-required="true">
-                    <md-option ng-repeat="(key, value) in courseGroupObj" ng-value="value">
-                        {{value.name}}
-                    </md-option>
-                </md-select>
-                <div ng-messages="signUpForm.group.$error">
-                    <div ng-message="required">필수 입력 사항입니다.</div>
+        <div>
+            <div> 기존 신청반</div>
+            <div ng-repeat="groupCourseUser in groupCourseUserList">
+                <div>과정 : {{groupCourseUser.course.name}} / 반 : {{groupCourseUser.name}}
+                    <md-button ng-click="deleteUserGroupRelation(groupCourseUser)">삭제</md-button>
                 </div>
-            </md-input-container>
-            <md-input-container>
-                <md-select ng-model="targetGroup" name="group" placeholder="반 선택 (필수)" ng-required="true">
-                    <md-option ng-repeat="group in selectedCourse.groups" value="{{group.id}}">
-                        {{group.name}}
-                    </md-option>
-                </md-select>
-                <div ng-messages="signUpForm.group.$error">
-                    <div ng-message="required">필수 입력 사항입니다.</div>
-                </div>
-            </md-input-container>
+            </div>
         </div>
+        <md-input-container>
+            <md-select ng-model="selectedCourse" name="course" placeholder="과정 선택 (필수)" ng-required="true">
+                <md-option ng-repeat="(key, value) in courseGroupObj" ng-value="value">
+                    {{value.name}}
+                </md-option>
+            </md-select>
+            <div ng-messages="signUpForm.group.$error">
+                <div ng-message="required">필수 입력 사항입니다.</div>
+            </div>
+        </md-input-container>
+        <md-input-container>
+            <md-select ng-model="targetGroup" name="group" placeholder="반 선택 (필수)" ng-required="true">
+                <md-option ng-repeat="group in selectedCourse.groups" value="{{group.id}}">
+                    {{group.name}}
+                </md-option>
+            </md-select>
+            <div ng-messages="signUpForm.group.$error">
+                <div ng-message="required">필수 입력 사항입니다.</div>
+            </div>
+        </md-input-container>
+        <md-button ng-click="createUserGroupRelation(targetGroup)">추가</md-button>
         <br>
         <md-button type="submit" class="md-raised md-block">제출</md-button>
         <md-button ng-click="cancel()" class="md-raised md-block">닫기</md-button>

@@ -10,6 +10,41 @@ from application.lib.rest.auth_helper import required_token
 from application.lib.rest.auth_helper import required_admin
 
 
+# create
+@api.route('/user-group-relations', methods=['POST'])
+@required_token
+def create_user_group_relation():
+    request_params = request.get_json()
+    user_id = request_params.get('userId')
+    group_id = request_params.get('groupId')
+
+    if user_id is None:
+        return jsonify(
+            userMessage="유저를 선택하셔야 합니다."
+        ), 400
+
+    if group_id is None:
+        return jsonify(
+            userMessage="그룹을 선택하셔야 합니다."
+        ), 400
+
+    q = db.session.query(UserGroupRelation).filter(UserGroupRelation.user_id == user_id,
+                                                   UserGroupRelation.group_id == group_id)
+
+    if q.count() > 0:
+        return jsonify(
+            userMeesage="이미 등록되어있는 반입니다."
+        ), 409
+
+    user_group_relation = UserGroupRelation(user_id=user_id, group_id=group_id)
+    db.session.add(user_group_relation)
+    db.session.commit()
+
+    return jsonify(
+        data=user_group_relation.serialize()
+    ), 200
+
+
 # read
 @api.route('/user-group-relations/<int:user_group_relation_id>', methods=['GET'])
 @required_token
@@ -106,7 +141,7 @@ def update_user_group_relation(user_group_relation_id):
 
 # delete
 @api.route('/user-group-relations/<int:user_group_relation_id>', methods=['DELETE'])
-@required_admin
+@required_token
 def delete_user_group_relation(user_group_relation_id):
     try:
         user_group_relation = db.session.query(UserGroupRelation).get(user_group_relation_id)
