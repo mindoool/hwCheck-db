@@ -34,9 +34,10 @@ def create_groups(course_id):
         db.session.add(group)
         db.session.commit()
 
-        return jsonify(
-            data=group.serialize()
-        ), 200
+        # return jsonify(
+        #     data=group.serialize()
+        # ), 200
+        return get_group_by_id(course_id, group.id)
     except:
         return jsonify(
             userMessage="반 생성에 실패하였습니다."

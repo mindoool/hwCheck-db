@@ -53,7 +53,7 @@ app.controller('CourseController', ['$scope', 'storage', '$mdMedia', '$mdDialog'
             $http.post(host+'/courses', courseData)
                 .then(function(response) {
                     console.log(response);
-                    $scope.courseList = CommonData.getCourseList();
+                    $scope.courseList.push(response.data.data);
                     $scope.hide();
                 })
         };
