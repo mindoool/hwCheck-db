@@ -7,8 +7,8 @@ app.controller('AdminController', ['$scope', 'storage', '$mdMedia', '$mdDialog',
 
     //문제목록 불러오는 거
     $scope.datepicker = {
-        "date1": new Date(Date.now()-7*24*60*60*1000),
-        "date2": new Date(Date.now()+7*24*60*60*1000)
+        "date1": new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        "date2": new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     };
 
     $scope.getProblemList = function () {
@@ -185,6 +185,56 @@ app.controller('AdminController', ['$scope', 'storage', '$mdMedia', '$mdDialog',
                 console.log(response);
                 $scope.userAnswerList = response.data.data;
             });
+
+        // export to csv
+        $scope.exportToCsv = function (userAnswerList) {
+            console.log(userAnswerList);
+            var finalVal = '';
+            for (var i = 0; i < userAnswerList.length; i++) {
+                var problemList = userAnswerList[i].problems;
+                if (i == 0) {
+                    for (var j = 0; j < problemList.length; j++) {
+                        if (j==0) {
+                            finalVal = "문제명,"
+                        }
+                        var problemName = problemList[j].name;
+                        var result = problemName.replace(/"/g, '""');
+                        if (result.search(/("|,|\n)/g) >= 0) {
+                            result = '"' + result + '"';
+                        }
+                        if (j > 0) {
+                            finalVal += ',';
+                        }
+                        finalVal += result;
+                    }
+                    finalVal += '\n';
+                }
+                for (var k = 0; k < problemList.length; k++) {
+                    if (k==0) {
+                        finalVal += userAnswerList[i].name;
+                        finalVal += ',';
+                    }
+                    var problemAnswer = problemList[k].answer.content;
+                    var result = problemAnswer.replace(/"/g, '""');
+                    if (result.search(/("|,|\n)/g) >= 0) {
+                        result = '"' + result + '"';
+                    }
+                    if (k > 0) {
+                        finalVal += ',';
+                    }
+                    finalVal += result;
+                }
+                finalVal += '\n';
+            }
+            console.log(finalVal);
+            var pom = document.createElement('a');
+            var csvContent = finalVal; //here we load our csv data
+            var blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
+            var url = URL.createObjectURL(blob);
+            pom.href = url;
+            pom.setAttribute('download', $scope.currentHomework.name);
+            pom.click();
+        }
     }
 
 }]);

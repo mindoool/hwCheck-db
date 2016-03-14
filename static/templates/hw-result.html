@@ -3,9 +3,12 @@
         <div flex>
             <div layout="row" class="hw-dialog-title">
                 <div flex="5"></div>
-                <div flex="45"> 과제명 : {{currentHomework.name}}</div>
+                <div flex="25"> 과제명 : {{currentHomework.name}}</div>
                 <div flex="25"> 제출기한 : {{currentHomework.date}}</div>
                 <div flex="20"> 제출상태 : {{currentHomework.users.isSubmitted}} / {{currentHomework.users.count}}</div>
+                <div flex="20">
+                    <md-button class="md-raised md-block" ng-click="exportToCsv(userAnswerList)">다운로드</md-button>
+                </div>
                 <div flex="5"></div>
             </div>
         </div>
@@ -27,7 +30,7 @@
             <div layout="row">
                 <div flex="80"></div>
                 <div flex="20">
-                    <md-button class="md-raised md-block" ng-click="cancel()"> Close</md-button>
+                    <md-button class="md-raised md-block" ng-click="cancel()">닫기</md-button>
                 </div>
             </div>
         </div>
