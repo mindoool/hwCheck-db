@@ -25,7 +25,7 @@ app.directive('fileReader', function () {
                         });
                     };
 
-                    r.readAsText(files[0]);
+                    r.readAsText(files[0], 'EUC-KR');
 
             };
         })
