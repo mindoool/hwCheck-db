@@ -43,16 +43,17 @@
             </div>
         </md-input-container>
         <div>
-            <div> 기존 신청반</div>
+            <md-button ng-disabled="true" class="md-raised md-primary">기존 신청반</md-button>
             <md-list-item layout="row">
-                <span flex="25">과정</span>
-                <span flex="25">반</span>
-                <span flex="25">삭제</span>
+                <span flex="15">과정</span>
+                <span flex="15">반</span>
+                <span flex="15">삭제</span>
             </md-list-item>
-            <md-list-item ng-repeat="group in groupList" layout="row">
-                <span flex="25" class="left"> {{groupCourseUser.course.name}} </span>
-                <span flex="25" class="left"> {{groupCourseUser.name}}</span>
-                <md-button flex="25" ng-click="deleteUserGroupRelation(groupCourseUser)">삭제</md-button>
+            <md-divider></md-divider>
+            <md-list-item ng-repeat="groupCourseUser in groupCourseUserList" layout="row">
+                <span flex="15" class="left"> {{groupCourseUser.course.name}} </span>
+                <span flex="15"> {{groupCourseUser.name}}</span>
+                <md-button flex="5" class="md-raised" ng-click="deleteUserGroupRelation(groupCourseUser)">삭제</md-button>
             </md-list-item>
         </div>
         <md-input-container>
